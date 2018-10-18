@@ -1,4 +1,4 @@
-Vuetk
+VueTK
 =====
 
 Currently developing
