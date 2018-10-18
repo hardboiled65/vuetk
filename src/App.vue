@@ -4,18 +4,21 @@
       :menus="menus">
       <template slot="toolbar">
         <div>Toolbar</div>
+        <bl-button></bl-button>
       </template>
     </bl-window>
   </div>
 </template>
 
 <script>
-import BlWindow from './components/BlWindow.vue'
+import BlWindow from './components/BlWindow'
+import BlButton from './components/BlButton'
 
 export default {
   name: 'app',
   components: {
-    BlWindow
+    BlWindow,
+    BlButton,
   },
 
   data: () => ({

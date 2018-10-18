@@ -12,6 +12,8 @@
         v-if="hasToolbar">
       </bl-window-toolbar>
     </slot>
+    <slot name="body">
+    </slot>
   </div>
 </template>
 
@@ -44,7 +46,7 @@
       },
 
       hasToolbar() {
-        return this.$slots.toolbar;
+        return Boolean(this.$slots.toolbar);
       },
     },
 
