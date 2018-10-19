@@ -1,44 +1,58 @@
 <template>
   <div class="bl-menu"
     :class="{
-      'menu-bar-menu': type === $bl.Menu.MenuBarMenu,
-      'context-menu': type === $bl.Menu.ContextMenu,
-    }">{{ name }}
+      'menu-bar-menu': type === $bl.Menu.MenuType.MenuBarMenu,
+      'context-menu': type === $bl.Menu.MenuType.ContextMenu,
+      'opened': opened,
+    }"
+    @click="$emit('click')"
+    @mouseenter="$emit('mouseenter')">{{ instance.title }}
+    <div class="menu-item-container"
+      v-if="opened">
+      <div>One</div>
+      <div>Two</div>
+    </div>
   </div>
 </template>
 
 <script>
-  import Vue from 'vue'
+  import Menu from '@/classes/Menu'
+
+  import BlMenuItem from '@/components/BlMenuItem'
 
   export default {
     name: 'bl-menu',
 
+    components: {
+      BlMenuItem,
+    },
+
     props: {
-      type: {
-        type: Number,
-        required: true,
-        validator: (value) => {
-          return Object.values(Vue.prototype.$bl.Menu).includes(value);
-        }
-      },
-
-      name: {
-        type: String,
-        default: null
-      },
-
-      items: {
-        type: Array,
+      opened: {
+        type: Boolean,
         required: true
-      }
+      },
+
+      instance: {
+        type: Menu,
+        required: true
+      },
     },
 
     data: () => ({
-      opened: false,
     }),
 
     computed: {
+      type() {
+        return this.instance.type;
+      }
     },
+
+    methods: {
+      test() {
+        console.log('test');
+      }
+    }
   }
 </script>
 
@@ -50,5 +64,15 @@
 
   .bl-menu.menu-bar-menu {
     padding: 0 10px;
+    height: 100%;
+  }
+
+  .bl-menu.menu-bar-menu.opened {
+    background-color: green;
+  }
+
+  .opened .menu-item-container {
+    position: absolute;
+    background-color: lightgrey;
   }
 </style>

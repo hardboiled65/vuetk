@@ -3,10 +3,11 @@
     :class="{
     }">
     <bl-menu
-      v-for="menu in menus" :key="menu"
-      :type="$bl.Menu.MenuBarMenu"
-      :name="menu"
-      :items="[]">
+      v-for="(menu, idx) in menus" :key="idx"
+      :opened="idx === openedMenuIndex"
+      :instance="menu"
+      @click="onClickMenu(idx)"
+      @mouseenter="onMouseenterMenu(idx)">
     </bl-menu>
   </div>
 </template>
@@ -28,7 +29,30 @@
       },
     },
 
+    data: () => ({
+      openedMenuIndex: null,
+    }),
+
     computed: {
+    },
+
+    methods: {
+      onClickMenu(idx) {
+        if (this.openedMenuIndex === idx) {
+          this.openedMenuIndex = null;
+        } else {
+          this.openedMenuIndex = idx;
+        }
+      },
+
+      onMouseenterMenu(idx) {
+        if (this.openedMenuIndex === null) {
+          return;
+        }
+        if (idx !== this.openedMenuIndex) {
+          this.openedMenuIndex = idx;
+        }
+      }
     }
   }
 </script>

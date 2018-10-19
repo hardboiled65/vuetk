@@ -7,11 +7,11 @@
       v-if="menus"
       :menus="menus">
     </bl-menu-bar>
-    <slot name="toolbar">
-      <bl-window-toolbar
-        v-if="hasToolbar">
-      </bl-window-toolbar>
-    </slot>
+    <bl-window-toolbar
+      v-if="hasToolbar">
+      <slot name="toolbar">
+      </slot>
+    </bl-window-toolbar>
     <slot name="body">
     </slot>
   </div>

@@ -2,6 +2,7 @@
   <div class="bl-window-toolbar"
     :class="{
     }">
+    <slot></slot>
   </div>
 </template>
 

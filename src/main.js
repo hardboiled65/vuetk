@@ -1,16 +1,14 @@
 import Vue from 'vue'
 import App from './App.vue'
 
+import Button from '@/classes/Button'
+import Menu from '@/classes/Menu'
+
 Vue.config.productionTip = false
 
 Vue.prototype.$bl = {
-  Menu: {
-    MenuBarMenu: 0,
-    ContextMenu: 1,
-  },
-  ButtonType: {
-    PushButton: 0,
-  }
+  Menu: Menu,
+  Button: Button,
 }
 
 new Vue({
