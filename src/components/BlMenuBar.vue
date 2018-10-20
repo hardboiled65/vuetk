@@ -61,6 +61,6 @@
   .bl-menu-bar {
     display: block;
     height: 22px;
-    background-color: grey;
+    background-color: #eeedeb;
   }
 </style>

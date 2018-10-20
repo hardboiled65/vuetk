@@ -19,6 +19,16 @@
       instance: {
         type: Button
       },
+
+      title: {
+        type: String,
+        default: null
+      },
+
+      title: {
+        type: String,
+        default: null
+      },
     },
 
     computed: {
