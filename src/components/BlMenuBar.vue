@@ -15,12 +15,18 @@
 <script>
   import BlMenu from './BlMenu'
 
+  import ViewMixin from '@/mixins/ViewMixin'
+
   export default {
     name: 'bl-menu-bar',
 
     components: {
       BlMenu,
     },
+
+    mixins: [
+      ViewMixin
+    ],
 
     props: {
       menus: {
@@ -40,8 +46,10 @@
       onClickMenu(idx) {
         if (this.openedMenuIndex === idx) {
           this.openedMenuIndex = null;
+          this.$bl.app.menu = null;
         } else {
           this.openedMenuIndex = idx;
+          this.$bl.app.menu = this.menus[idx];
         }
       },
 

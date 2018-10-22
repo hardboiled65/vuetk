@@ -7,8 +7,14 @@
 </template>
 
 <script>
+  import ViewMixin from '@/mixins/ViewMixin'
+
   export default {
     name: 'bl-window-toolbar',
+
+    mixins: [
+      ViewMixin
+    ],
 
     props: {
     },

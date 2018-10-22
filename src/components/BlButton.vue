@@ -1,8 +1,6 @@
 <template>
   <button class="bl-button"
-    :class="{
-      'push-button': type === $bl.Button.ButtonType.PushButton,
-    }"
+    :class="buttonClass"
     @click="instance.action">
       <span
         v-if="type === $bl.Button.ButtonType.PushButton">{{ instance.title }}</span>
@@ -10,6 +8,8 @@
 </template>
 
 <script>
+  import ViewMixin from '@/mixins/ViewMixin'
+
   import Button from '@/classes/Button'
 
   export default {
@@ -31,9 +31,21 @@
       },
     },
 
+    mixins: [
+      ViewMixin
+    ],
+
     computed: {
       type() {
         return this.instance.type;
+      },
+
+      buttonClass() {
+        let cls = Object.assign({}, this.viewClass);
+
+        cls['push-button'] = this.type === Button.ButtonType.PushButton;
+
+        return cls;
       }
     }
   }

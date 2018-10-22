@@ -18,7 +18,8 @@
             @click="selectedDir = null">
             <div class="file"
               v-for="file in findFile(pwd).children" :key="file.name"
-              @click.stop="onClickFile(file)">
+              @click.stop="onClickFile(file)"
+              @contextmenu.stop.prevent="onClickFile(file)">
               <span>{{ file.name }}</span>
             </div>
           </div>
@@ -44,28 +45,51 @@
           </div>
         </div>
       </template>
+      <!-- Confirm delete -->
+      <div id="app2"></div>
+      <bl-alert
+        v-if="modal"
+        v-model="modal"
+        :instance="alert">
+      </bl-alert>
     </bl-window>
   </div>
 </template>
 
 <script>
-import BlWindow from './components/BlWindow'
-import BlButton from './components/BlButton'
+import BlWindow from '@/components/BlWindow'
+import BlAlert from '@/components/BlAlert'
+import BlButton from '@/components/BlButton'
 
-import Menu from './classes/Menu'
-import Button from './classes/Button'
+import { Alert } from '@/classes/Window'
+import Menu from '@/classes/Menu'
+import MenuItem from '@/classes/MenuItem'
+import Button from '@/classes/Button'
 
 export default {
   name: 'app',
   components: {
     BlWindow,
+    BlAlert,
     BlButton,
   },
 
   data: () => ({
     menus: [],
+    //===================
+    // Unique references
+    //===================
+    menu: null,
+    modal: null,
+    //===============
+    // Views
+    //===============
     upButton: null,
     newFolderButton: null,
+    alert: null,
+    //===============
+    // State
+    //===============
     pwd: '/',
     selectedDir: null,
     selectedFile: null,
@@ -73,14 +97,22 @@ export default {
       type: 'folder',
       name: '/',
       children: []
-    }
+    },
   }),
 
   created() {
+    this.$bl.app = this;
+
     // Set menus
     this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'File'));
     this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'Edit'));
     this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'Help'));
+
+    this.menus[2].items.push(new MenuItem('About'));
+
+    // Set alert
+    this.alert = new Alert();
+    this.alert.message = 'Delete';
 
     // Set buttons
     this.upButton = new Button();
@@ -144,13 +176,30 @@ export default {
       this.pwd = path;
     },
 
+    childOf(path, parentPath) {
+      const targetPath = (parentPath === '/') ? parentPath : parentPath + '/';
+      return path.replace(/[^/]+$/, '') === targetPath;
+    },
+
+    parentDir(path) {
+      path = path.replace(/[^/]+$/, '');
+      if (path === '/') {
+        return '/';
+      }
+      return path.substring(0, path.length - 1);
+    },
+
     //======================
     // Click actions
     //======================
     onClickFile(file) {
       const path = this.getFullPath(file);
       if (file.type === 'folder') {
+        if (path === this.pwd) {
+          return;
+        }
         this.selectedDir = path;
+        this.pwd = this.parentDir(path);
       } else {
         this.selectedFile = path;
       }
@@ -160,7 +209,7 @@ export default {
       if (this.pwd === '/') {
         return;
       }
-      let path = this.pwd.replace(/[^\/]+$/, '');
+      let path = this.pwd.replace(/[^/]+$/, '');
       path !== '/' ? path = path.substring(0, path.length -1) : null;
       this.enterDir(path);
     },
@@ -178,6 +227,7 @@ export default {
         if (found) {
           name = 'Folder ' + num;
         }
+        ++num;
       } while (found)
 
       // Add to folder.
@@ -204,7 +254,7 @@ export default {
 }
 
 .file:hover {
-  background-color: grey;
+  background-color: #9999ff;
   color: white;
 }
 
