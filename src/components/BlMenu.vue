@@ -9,8 +9,10 @@
     @mouseenter="$emit('mouseenter')">{{ instance.title }}
     <div class="menu-item-container"
       v-if="opened">
-      <div>One</div>
-      <div>Two</div>
+      <bl-menu-item
+        v-for="item in instance.items" :key="item.title"
+        :instance="item">
+      </bl-menu-item>
     </div>
   </div>
 </template>
