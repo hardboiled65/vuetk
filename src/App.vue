@@ -16,21 +16,21 @@
           <div class="current-dir"
             style="width: 400px; border-right: 1px solid black;"
             @click="selectedDir = null">
-            <div class="file"
+            <bl-view class="file"
               v-for="file in findFile(pwd).children" :key="file.name"
               @click.stop="onClickFile(file)"
               @contextmenu.stop.prevent="onClickFile(file)">
               <span>{{ file.name }}</span>
-            </div>
+            </bl-view>
           </div>
           <div class="sub-dir"
             v-if="selectedDir !== null"
             style="width: 400px;">
-            <div class="file"
+            <bl-view class="file"
               v-for="file in findFile(selectedDir).children" :key="file.name"
               @click.stop="onClickFile(file)">
               <span>{{ file.name }}</span>
-            </div>
+            </bl-view>
           </div>
           <div class="sub-dir empty"
             v-else
@@ -60,6 +60,7 @@
 import BlWindow from '@/components/BlWindow'
 import BlAlert from '@/components/BlAlert'
 import BlButton from '@/components/BlButton'
+import BlView from '@/components/BlView'
 
 import { Alert } from '@/classes/Window'
 import Menu from '@/classes/Menu'
@@ -72,6 +73,7 @@ export default {
     BlWindow,
     BlAlert,
     BlButton,
+    BlView,
   },
 
   data: () => ({
@@ -108,6 +110,8 @@ export default {
     this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'Edit'));
     this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'Help'));
 
+    this.menus[2].items.push(new MenuItem('Handbook'));
+    this.menus[2].items.push(MenuItem.separator());
     this.menus[2].items.push(new MenuItem('About'));
 
     // Set alert

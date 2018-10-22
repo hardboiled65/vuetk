@@ -77,8 +77,16 @@
 
     methods: {
       captureAll(evt) {
-        // console.log('BlWindow: click captured');
-        if (this.$bl.app.menu || this.$bl.app.modal) {
+        if (this.$bl.app.menu) {
+          if (evt.target.className === 'bl-menu-item-node') {
+            if (!evt.target.parentNode.className.includes('enabled')) {
+              evt.stopPropagation();
+              return;
+            }
+          }
+          if (evt.target.className.split(' ').includes('bl-menu')) {
+            return;
+          }
           this.$bl.app.menu = null;
           // evt.stopPropagation();
         }

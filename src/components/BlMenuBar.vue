@@ -36,19 +36,28 @@
     },
 
     data: () => ({
-      openedMenuIndex: null,
     }),
 
     computed: {
+      openedMenuIndex() {
+        if (this.$bl.app.menu === null) {
+          return null;
+        }
+        const found = this.menus.findIndex(m => {
+          return m === this.$bl.app.menu;
+        });
+        if (found > -1) {
+          return found;
+        }
+        return null;
+      },
     },
 
     methods: {
       onClickMenu(idx) {
         if (this.openedMenuIndex === idx) {
-          this.openedMenuIndex = null;
           this.$bl.app.menu = null;
         } else {
-          this.openedMenuIndex = idx;
           this.$bl.app.menu = this.menus[idx];
         }
       },
@@ -58,7 +67,7 @@
           return;
         }
         if (idx !== this.openedMenuIndex) {
-          this.openedMenuIndex = idx;
+          this.$bl.app.menu = this.menus[idx];
         }
       }
     }

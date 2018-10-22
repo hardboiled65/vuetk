@@ -24,11 +24,6 @@
         type: String,
         default: null
       },
-
-      title: {
-        type: String,
-        default: null
-      },
     },
 
     mixins: [
