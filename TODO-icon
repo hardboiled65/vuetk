@@ -1,0 +1,91 @@
+Control = {
+  Action
+  Add
+  Bluetooth
+  Bookmarks
+  ColumnView
+  EnterFullScreen Mode    NSImageNameEnterFullScreenTemplate
+  ExitFullScreen Mode     NSImageNameExitFullScreenTemplate
+  Cover Flow View         NSImageNameFlowViewTemplate
+  GoBack
+  GoForward
+  GoLeft
+  GoRight
+  IconView
+  LeftFacingTriangle
+  ListView
+  Locked
+  Unlocked
+  Path
+  QuickLook
+  Refresh
+  Remove
+  RightFacingTriangle
+  Share
+  Slideshow
+  SmartBadge
+  StopProgress
+}
+
+// Done!
+Freestanding = {
+  FollowLink
+  InvalidData
+  Refresh
+  Reveal
+  StopProgress
+}
+
+// Done!
+MenuState = {
+  Mixed
+  On
+}
+
+Multi-Item Drag Image Icons
+{
+  MultipleDocuments
+}
+
+// Done!
+Permission = {
+  Everyone
+  User
+  Group
+  Guest
+}
+
+// Done!
+Preferences = {
+  Advanced
+  General
+  UserAccounts
+}
+
+// Done!
+Status = {
+  Available
+  None
+  PartiallyAvailable
+  Unavailable
+}
+
+SystemEntity = {
+  App Icon (your app’s icon)  NSImageNameApplicationIcon
+  Bonjour
+  Burnable Folder             NSImageNameFolderBurnable
+  Caution
+  Computer (represents the current computer)            NSImageNameComputer
+  Folder                      NSImageNameFolder
+  Home                        NSImageNameHomeTemplate
+  Network
+  Smart Folder                NSImageNameFolderSmart
+  TrashEmpty
+  TrashFull
+}
+
+Toolbar = {
+  ColorPanel
+  FontsPanel ? FontPanel
+  Info
+}
