@@ -47,6 +47,9 @@
         if (this.instance.isSeparator()) {
           return;
         }
+        if (this.instance.action) {
+          this.instance.action();
+        }
         console.log('menu item clicked');
       },
     }

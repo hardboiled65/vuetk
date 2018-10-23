@@ -2,6 +2,7 @@ class MenuItem {
   constructor(title='') {
     this._title = title;
     this._isSeparator = false;
+    this._action = null;
   }
 
   //==================
@@ -13,6 +14,14 @@ class MenuItem {
 
   set title(title) {
     this._title = title;
+  }
+
+  get action() {
+    return this._action;
+  }
+
+  set action(action) {
+    this._action = action;
   }
 
   //==================

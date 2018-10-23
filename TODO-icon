@@ -4,9 +4,9 @@ Control = {
   Bluetooth
   Bookmarks
   ColumnView
-  EnterFullScreen Mode    NSImageNameEnterFullScreenTemplate
-  ExitFullScreen Mode     NSImageNameExitFullScreenTemplate
-  Cover Flow View         NSImageNameFlowViewTemplate
+  EnterFullScreen
+  ExitFullScreen
+  FlowView
   GoBack
   GoForward
   GoLeft
@@ -51,8 +51,8 @@ Multi-Item Drag Image Icons
 Permission = {
   Everyone
   User
-  Group
-  Guest
+  UserGroup
+  UserGuest
 }
 
 // Done!
@@ -70,22 +70,24 @@ Status = {
   Unavailable
 }
 
+// Done!
 SystemEntity = {
-  App Icon (your app’s icon)  NSImageNameApplicationIcon
+  ApplicationIcon
   Bonjour
-  Burnable Folder             NSImageNameFolderBurnable
+  FolderBurnable
   Caution
-  Computer (represents the current computer)            NSImageNameComputer
-  Folder                      NSImageNameFolder
-  Home                        NSImageNameHomeTemplate
+  Computer
+  Folder
+  Home
   Network
-  Smart Folder                NSImageNameFolderSmart
+  FolderSmart
   TrashEmpty
   TrashFull
 }
 
+// Done!
 Toolbar = {
   ColorPanel
-  FontsPanel ? FontPanel
+  FontPanel
   Info
 }

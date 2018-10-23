@@ -46,12 +46,16 @@
         </div>
       </template>
       <!-- Confirm delete -->
-      <div id="app2"></div>
       <bl-alert
         v-if="modal"
         v-model="modal"
         :instance="alert">
       </bl-alert>
+      <!-- About panel -->
+      <bl-window
+        v-if="showAbout">
+        <bl-view>Hello!</bl-view>
+      </bl-window>
     </bl-window>
   </div>
 </template>
@@ -66,6 +70,7 @@ import { Alert } from '@/classes/Window'
 import Menu from '@/classes/Menu'
 import MenuItem from '@/classes/MenuItem'
 import Button from '@/classes/Button'
+import Icon from '@/classes/Icon'
 
 export default {
   name: 'app',
@@ -100,6 +105,7 @@ export default {
       name: '/',
       children: []
     },
+    showAbout: false,
   }),
 
   created() {
@@ -114,9 +120,15 @@ export default {
     this.menus[2].items.push(MenuItem.separator());
     this.menus[2].items.push(new MenuItem('About'));
 
+    this.menus[2].items[2].action = () => {
+      console.log(this);
+      this.showAbout = true;
+    }
+
     // Set alert
     this.alert = new Alert();
     this.alert.message = 'Delete';
+    this.alert.icon = new Icon('Control.Action');
 
     // Set buttons
     this.upButton = new Button();

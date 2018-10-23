@@ -1,6 +1,7 @@
 <template>
   <bl-window class="bl-alert" ref="window">
     <template slot="body">
+      <img :src="instance.icon.src('32x32')">
       <h1 v-if="instance.message">{{ instance.message }}</h1>
       <div>{{ instance.informativeText }}</div>
       <div class="buttons">
