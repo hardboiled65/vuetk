@@ -2,6 +2,7 @@
   <div id="app">
     <bl-window ref="mainWindow"
       :menus="menus">
+      <!-- Window toolbar -->
       <template slot="toolbar">
         <bl-button
           :instance="upButton">
@@ -10,51 +11,44 @@
           :instance="newFolderButton">
         </bl-button>
       </template>
+      <!-- Window body -->
       <template slot="body">
-        <div class="body-frame"
-          style="display: flex; height: 80%">
-          <div class="current-dir"
-            style="width: 400px; border-right: 1px solid black;"
-            @click="selectedDir = null">
-            <bl-view class="file"
-              v-for="file in findFile(pwd).children" :key="file.name"
-              @click.stop="onClickFile(file)"
-              @contextmenu.stop.prevent="onClickFile(file)">
-              <span>{{ file.name }}</span>
-            </bl-view>
-          </div>
-          <div class="sub-dir"
-            v-if="selectedDir !== null"
-            style="width: 400px;">
-            <bl-view class="file"
-              v-for="file in findFile(selectedDir).children" :key="file.name"
-              @click.stop="onClickFile(file)">
-              <span>{{ file.name }}</span>
-            </bl-view>
-          </div>
-          <div class="sub-dir empty"
-            v-else
-            style="width: 400px;">
-          </div>
+        <bl-browser
+          :instance="browser"
+          @selectColumn="onSelectColumn"
+          @selectRow="onSelectRow">
           <div class="preview"
             style="width: auto;">
             <div class="preview-content"
-              v-if="selectedFile !== null && findFile(selectedFile).type === 'text'">
-              <p>{{ findFile(selectedFile).data }}</p>
+              v-if="selectedFile !== null && selectedFile.type === 'text'">
+              <bl-button
+                :instance="editButton">
+              </bl-button>
+              <h3>{{ selectedFile.name }}</h3>
+              <p>{{ selectedFile.data }}</p>
             </div>
           </div>
-        </div>
+        </bl-browser>
       </template>
       <!-- Confirm delete -->
-      <bl-alert
+      <bl-alert ref="alert"
         v-if="modal"
         v-model="modal"
         :instance="alert">
       </bl-alert>
       <!-- About panel -->
       <bl-window
-        v-if="showAbout">
+        v-if="showAbout"
+        @windowClose="showAbout = false">
         <bl-view>Hello!</bl-view>
+      </bl-window>
+      <!-- Editor window -->
+      <bl-window
+        v-if="showEditor"
+        @windowClose="showEditor = false">
+        <textarea
+          v-model="selectedFile.data">
+        </textarea>
       </bl-window>
     </bl-window>
   </div>
@@ -65,11 +59,13 @@ import BlWindow from '@/components/BlWindow'
 import BlAlert from '@/components/BlAlert'
 import BlButton from '@/components/BlButton'
 import BlView from '@/components/BlView'
+import BlBrowser from '@/components/BlBrowser'
 
 import { Alert } from '@/classes/Window'
 import Menu from '@/classes/Menu'
 import MenuItem from '@/classes/MenuItem'
 import Button from '@/classes/Button'
+import Browser from '@/classes/Browser'
 import Icon from '@/classes/Icon'
 
 export default {
@@ -79,6 +75,7 @@ export default {
     BlAlert,
     BlButton,
     BlView,
+    BlBrowser,
   },
 
   data: () => ({
@@ -91,8 +88,10 @@ export default {
     //===============
     // Views
     //===============
+    browser: null,
     upButton: null,
     newFolderButton: null,
+    editButton: null,
     alert: null,
     //===============
     // State
@@ -106,7 +105,14 @@ export default {
       children: []
     },
     showAbout: false,
+    showEditor: false,
   }),
+
+  watch: {
+    selectedDir(newValue) {
+      this.setRows();
+    },
+  },
 
   created() {
     this.$bl.app = this;
@@ -116,19 +122,30 @@ export default {
     this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'Edit'));
     this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'Help'));
 
+    this.menus[0].items.push(new MenuItem('New Text File'));
+    this.menus[0].items[0].action = this.newTextFileAction;
+
+    this.menus[1].items.push(new MenuItem('Delete'));
+    this.menus[1].items[0].action = this.deleteFileAction;
+
     this.menus[2].items.push(new MenuItem('Handbook'));
     this.menus[2].items.push(MenuItem.separator());
     this.menus[2].items.push(new MenuItem('About'));
 
     this.menus[2].items[2].action = () => {
-      console.log(this);
       this.showAbout = true;
     }
 
     // Set alert
     this.alert = new Alert();
     this.alert.message = 'Delete';
+    this.alert.informativeText = 'Are you sure to delete file?';
     this.alert.icon = new Icon('Control.Action');
+
+    // Set browser
+    this.browser = new Browser();
+    this.browser.addColumn();
+    this.browser.addColumn();
 
     // Set buttons
     this.upButton = new Button();
@@ -138,6 +155,10 @@ export default {
     this.newFolderButton = new Button();
     this.newFolderButton.title = 'New Folder';
     this.newFolderButton.action = this.onClickNewFolderButton;
+
+    this.editButton = new Button();
+    this.editButton.title = 'Edit';
+    this.editButton.action = this.editAction;
 
     // Set directory structure
     this.root.children.push({
@@ -154,10 +175,15 @@ export default {
       parent: docs,
       data: 'Hello, VueTK!'
     });
+
+    // Sync directory structure
+    this.setRows();
   },
 
   mounted() {
     this.$refs.mainWindow.title = 'Pouch'
+
+    window.location.replace(window.location.origin + '#/');
   },
 
   methods: {
@@ -190,6 +216,7 @@ export default {
       console.log('enter', path);
       const dir = this.findFile(path);
       this.pwd = path;
+      window.location.replace(window.location.origin + '#' + this.pwd)
     },
 
     childOf(path, parentPath) {
@@ -206,6 +233,26 @@ export default {
     },
 
     //======================
+    // Sync columns & rows
+    //======================
+    setRows() {
+      // Set column-0
+      const pwdFile = this.findFile(this.pwd);
+      this.browser.columns[0].rows = [];
+      for (let i = 0; i < pwdFile.children.length; ++i) {
+        this.browser.columns[0].rows.push(pwdFile.children[i].name);
+      }
+      // Set column-1
+      this.browser.columns[1].rows = [];
+      if (this.selectedDir) {
+        const selectedDirFile = this.findFile(this.selectedDir);
+        for (let i = 0; i < selectedDirFile.children.length; ++i) {
+          this.browser.columns[1].rows.push(selectedDirFile.children[i].name);
+        }
+      }
+    },
+
+    //======================
     // Click actions
     //======================
     onClickFile(file) {
@@ -215,9 +262,10 @@ export default {
           return;
         }
         this.selectedDir = path;
-        this.pwd = this.parentDir(path);
+        // this.pwd = this.parentDir(path);
+        this.enterDir(this.parentDir(path));
       } else {
-        this.selectedFile = path;
+        this.selectedFile = file;
       }
     },
 
@@ -228,6 +276,7 @@ export default {
       let path = this.pwd.replace(/[^/]+$/, '');
       path !== '/' ? path = path.substring(0, path.length -1) : null;
       this.enterDir(path);
+      this.setRows();
     },
 
     onClickNewFolderButton() {
@@ -253,7 +302,62 @@ export default {
         parent: folder,
         children: []
       });
-    }
+      this.setRows();
+    },
+
+    onSelectColumn(col) {
+      // console.log('col', col);
+    },
+
+    onSelectRow(col, row) {
+      if (col === 0 && row !== null) {
+        const filename = this.browser.columns[col].rows[row];
+        const path = (this.pwd === '/') ? `/${filename}` : `${this.pwd}/${filename}`;
+        const file = this.findFile(path);
+        this.onClickFile(file);
+        this.setRows();
+      } else if (col === 0 && row === null) {
+        this.selectedDir = null;
+      }
+
+      if (col === 1 && row !== null) {
+        const filename = this.browser.columns[col].rows[row];
+        const path = (this.selectedDir === '/')
+          ? `/${filename}`
+          : `${this.selectedDir}/${filename}`;
+        const file = this.findFile(path);
+        this.onClickFile(file);
+        this.setRows();
+      } else if (col === 1 && row === null) {
+        this.selectedFile = null;
+      }
+    },
+
+    //===================
+    // Actions
+    //===================
+    newFolderAction() {
+      this.onClickNewFolderButton();
+    },
+
+    newTextFileAction() {
+      let folder = this.findFile(this.pwd);
+      folder.children.push({
+        type: 'text',
+        name: new Date().toLocaleString(),
+        parent: folder,
+        data: ''
+      });
+      this.setRows();
+    },
+
+    editAction() {
+      this.showEditor = true;
+    },
+
+    deleteFileAction() {
+      this.modal = this.alert;
+    },
   }
 }
 </script>
@@ -267,14 +371,5 @@ export default {
   color: #2c3e50;
   height: 100%;
   width: 100%;
-}
-
-.file:hover {
-  background-color: #9999ff;
-  color: white;
-}
-
-.sub-dir {
-  border-right: 1px solid grey;
 }
 </style>

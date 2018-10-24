@@ -5,8 +5,13 @@
       'sub-window': !mainWindow,
     }"
     @click.capture="captureAll($event)">
-    <div class="title-bar"
-      v-if="!mainWindow">
+    <div class="title-bar" ref="titleBar"
+      v-if="!mainWindow"
+      @click="captureAll($event)">
+      <button
+        v-if="hasButtonWindowClose"
+        @click="$emit('windowClose')">X</button>
+      <button>-</button>
       <span class="title">{{ title }}</span>
     </div>
     <bl-menu-bar
@@ -43,6 +48,11 @@
         type: Array,
         default: null
       },
+
+      hasButtonWindowClose: {
+        type: Boolean,
+        default: true
+      },
     },
 
     data: () => ({
@@ -77,6 +87,7 @@
 
     methods: {
       captureAll(evt) {
+        // Capture when menu opened.
         if (this.$bl.app.menu) {
           if (evt.target.className === 'bl-menu-item-node') {
             if (!evt.target.parentNode.className.includes('enabled')) {
@@ -90,7 +101,33 @@
           this.$bl.app.menu = null;
           // evt.stopPropagation();
         }
-      }
+        // Capture when modal opened.
+        if (this.$bl.app.modal) {
+          const path = evt.composedPath();
+          for (let i = 0; i < path.length; ++i) {
+            if (path[i].className && path[i].className.includes('bl-alert')) {
+              return;
+            }
+          }
+          this.$bl.app.$refs.alert.$refs.window.$emit('windowBlink');
+          evt.stopPropagation();
+        }
+      },
+
+      blinkWindowTitleBar() {
+        let intervalId = setInterval(() => {
+          const classList = this.$refs.titleBar.classList;
+          if (!classList.contains('indicator')) {
+            this.$refs.titleBar.classList.add('indicator');
+          } else {
+            this.$refs.titleBar.classList.remove('indicator');
+          }
+        }, 50);
+        setTimeout(() => {
+          clearInterval(intervalId);
+          this.$refs.titleBar.classList.remove('indicator');
+        }, 500);
+      },
     }
   }
 </script>
@@ -119,7 +156,7 @@
     background-color: lightgrey;
   }
 
-  .bl-window .title-bar.alert {
+  .bl-window .title-bar.indicator {
     background-color: red;
   }
 

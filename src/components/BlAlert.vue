@@ -1,5 +1,7 @@
 <template>
-  <bl-window class="bl-alert" ref="window">
+  <bl-window class="bl-alert" ref="window"
+    :hasButtonWindowClose="false"
+    @windowBlink="onWindowBlink">
     <template slot="body">
       <img :src="instance.icon.src('32x32')">
       <h1 v-if="instance.message">{{ instance.message }}</h1>
@@ -57,13 +59,27 @@
 
     mounted() {
       this.$refs.window.title = '';
+    },
+
+    methods: {
+      onWindowBlink() {
+        this.$refs.window.blinkWindowTitleBar();
+      },
     }
   }
 </script>
 
 <style scoped>
+  .bl-alert {
+    pointer-events: initial;
+  }
+
   .bl-alert .buttons {
     display: flex;
     flex-direction: row-reverse;
+  }
+
+  .bl-alert .bl-view {
+    pointer-events: inherit;
   }
 </style>

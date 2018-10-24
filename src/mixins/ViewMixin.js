@@ -7,7 +7,7 @@ export default {
         'bl-view': true
       };
 
-      if (this.$bl.app.menu) {
+      if (this.$bl.app.menu || this.$bl.app.modal) {
         cls['pointer-events-none'] = true;
       }
       return cls;
