@@ -152,12 +152,20 @@
   }
 
   .bl-window .title-bar {
-    height: 20px;
-    background-color: lightgrey;
+    height: 32px;
+    background-color: #e2dfde;
+    display: flex;
+    align-items: center;
   }
 
   .bl-window .title-bar.indicator {
     background-color: red;
+  }
+
+  .bl-window .title-bar button {
+    height: 21px;
+    width: 21px;
+    border-radius: 25px;
   }
 
   .main-window {

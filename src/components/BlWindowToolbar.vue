@@ -28,5 +28,8 @@
   .bl-window-toolbar {
     height: 40px;
     background-color: grey;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
   }
 </style>

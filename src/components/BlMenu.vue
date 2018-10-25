@@ -67,6 +67,8 @@
   .bl-menu.menu-bar-menu {
     padding: 0 10px;
     height: 100%;
+    display: flex;
+    align-items: center;
   }
 
   .bl-menu.menu-bar-menu.opened {
@@ -75,6 +77,7 @@
 
   .opened .menu-item-container {
     position: absolute;
+    top: 30px;
     background-color: lightgrey;
   }
 </style>

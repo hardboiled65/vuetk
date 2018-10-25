@@ -76,8 +76,8 @@
 
 <style scoped>
   .bl-menu-bar {
-    display: block;
-    height: 22px;
+    display: flex;
+    height: 30px;
     background-color: #eeedeb;
   }
 </style>

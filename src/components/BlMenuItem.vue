@@ -3,7 +3,8 @@
     :class="menuItemClass"
     @click.stop="onClick($event)">
     <span class="bl-menu-item-node"
-      v-if="!instance.isSeparator()">{{ instance.title }}</span>
+      v-if="!instance.isSeparator()"
+      style="height: 26px;">{{ instance.title }}</span>
     <div class="bl-menu-item-node"
       v-else>-----</div>
   </div>
@@ -58,12 +59,22 @@
 
 <style scoped>
   .bl-menu-item {
-    height: 28px;
+    height: 30px;
     display: flex;
     align-items: center;
   }
 
-  .bl-menu-item.enabled:hover {
-    background-color: blue;
+  .bl-menu-item span {
+    width: 100%;
+    margin: 2px;
+    padding: 0 5px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+  }
+
+  .bl-menu-item.enabled:hover span {
+    background-color: #bbb4b1;
+    box-shadow: inset 0 1px 1px darkgrey;
   }
 </style>

@@ -344,7 +344,7 @@ export default {
       let folder = this.findFile(this.pwd);
       folder.children.push({
         type: 'text',
-        name: new Date().toLocaleString(),
+        name: new Date().toLocaleString().replace(/[/]/g, '-'),
         parent: folder,
         data: ''
       });
