@@ -5,19 +5,22 @@
       'sub-window': !mainWindow,
     }"
     :style="windowStyle"
-    @click.capture="captureAll($event)"> <!-- ??? -->
+    @click.capture="captureAll($event)">
     <div class="title-bar" ref="titleBar"
       v-if="!mainWindow"
       draggable="true"
       @dragstart="onDragstart($event)"
       @dragend.prevent="onDragend($event)"
       @drag="onDragging($event)"
-      @click="captureAll($event)">
+      @click="captureAll($event)"> <!-- ??? -->
       <div class="buttons">
         <button
-          v-if="hasButtonWindowClose"
-          @click="$emit('windowClose')">X</button>
-        <button>-</button>
+          v-if="setButtonWindowClose"
+          @click="$emit('windowClose')"
+          @mousedown.stop.prevent>X</button>
+        <button
+          v-if="setButtonWindowMinimize"
+          @mousedown.stop.prevent>-</button>
       </div>
       <span class="title">{{ title }}</span>
       <div class="right-space">
@@ -72,7 +75,12 @@
         default: null
       },
 
-      hasButtonWindowClose: {
+      setButtonWindowClose: {
+        type: Boolean,
+        default: true
+      },
+
+      setButtonWindowMinimize: {
         type: Boolean,
         default: true
       },

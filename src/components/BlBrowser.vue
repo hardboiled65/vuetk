@@ -63,6 +63,7 @@
   .bl-browser .column {
     width: 300px;
     border-right: 1px solid grey;
+    background-color: #ffffff;
   }
 
   .bl-browser .column .row:hover {

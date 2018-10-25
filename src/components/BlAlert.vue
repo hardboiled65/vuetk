@@ -1,7 +1,8 @@
 <template>
   <bl-window class="bl-alert" ref="window"
     :instance="instance"
-    :hasButtonWindowClose="false"
+    :setButtonWindowClose="false"
+    :setButtonWindowMinimize="false"
     @windowBlink="onWindowBlink">
     <template slot="body">
       <img :src="instance.icon.src('32x32')">
