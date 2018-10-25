@@ -4,15 +4,24 @@
       'main-window': mainWindow,
       'sub-window': !mainWindow,
     }"
-    @click.capture="captureAll($event)">
+    :style="windowStyle"
+    @click.capture="captureAll($event)"> <!-- ??? -->
     <div class="title-bar" ref="titleBar"
       v-if="!mainWindow"
+      draggable="true"
+      @dragstart="onDragstart($event)"
+      @dragend.prevent="onDragend($event)"
+      @drag="onDragging($event)"
       @click="captureAll($event)">
-      <button
-        v-if="hasButtonWindowClose"
-        @click="$emit('windowClose')">X</button>
-      <button>-</button>
+      <div class="buttons">
+        <button
+          v-if="hasButtonWindowClose"
+          @click="$emit('windowClose')">X</button>
+        <button>-</button>
+      </div>
       <span class="title">{{ title }}</span>
+      <div class="right-space">
+      </div>
     </div>
     <bl-menu-bar
       v-if="menus"
@@ -28,12 +37,21 @@
     </slot>
     <!-- Other components out of window view -->
     <slot></slot>
+    <!-- DEBUG -->
+    <div v-if="false">
+      <div v-if="mainWindow">cursor: <span id="cursor"></span></div>
+      <div v-if="mainWindow">start-rect: <span id="start-rect"></span></div>
+      <div v-if="mainWindow">cur-rect: <span id="cur-rect"></span></div>
+      <div v-if="mainWindow">offset: <span id="offset"></span></div>
+    </div>
   </div>
 </template>
 
 <script>
   import BlMenuBar from './BlMenuBar'
   import BlWindowToolbar from './BlWindowToolbar'
+
+  import { ApplicationWindow } from '@/classes/Window'
 
   export default {
     name: 'bl-window',
@@ -44,6 +62,11 @@
     },
 
     props: {
+      instance: {
+        type: ApplicationWindow,
+        required: false
+      },
+
       menus: {
         type: Array,
         default: null
@@ -57,6 +80,20 @@
 
     data: () => ({
       title: 'App',
+      dragging: false,
+
+      documentDragoverHandler: null,
+      cursorRect: {
+        x: null,
+        y: null
+      },
+      $_draggingRectX: null,
+      $_draggingRectY: null,
+      offsetRect: {
+        x: null,
+        y: null
+      },
+      wtf: 'wtf?',
     }),
 
     computed: {
@@ -67,6 +104,17 @@
       hasToolbar() {
         return Boolean(this.$slots.toolbar);
       },
+
+      windowStyle() {
+        let style = {};
+
+        if (this.instance) {
+          style.top = this.instance.y + 'px';
+          style.left = this.instance.x + 'px';
+        }
+
+        return style;
+      }
     },
 
     watch: {
@@ -128,6 +176,75 @@
           this.$refs.titleBar.classList.remove('indicator');
         }, 500);
       },
+
+      //=========================
+      // On developing
+      //=========================
+      /**
+       * For debugging.
+       */
+      onTest(evt) {
+        // eslint-disable-next-line
+        console.log('test', evt);
+      },
+
+      onDragstart(evt) {
+        this.dragging = true;
+        const rect = evt.target.getBoundingClientRect();
+        this.$_draggingRectX = rect.x;
+        this.$_draggingRectY = rect.y;
+        // console.log('dragstart', this.$_draggingRectX, this.$_draggingRectY);
+        let ghost = document.createElement('img');
+        evt.dataTransfer.setDragImage(ghost, 0, 0);
+        evt.dataTransfer.effectAllowed = 'move';
+        evt.dataTransfer.setData('Text', 'dragging');
+        this.documentDragoverHandler = document.addEventListener(
+          'dragover', (evt) => {
+            this.cursorRect.x = evt.clientX;
+            this.cursorRect.y = evt.clientY;
+          });
+      },
+
+      onDragging(evt) {
+        if (!this.cursorRect.x) {
+          return;
+        }
+        const rect = evt.target.getBoundingClientRect();
+        if (this.offsetRect.x === null) {
+          this.offsetRect.x = this.cursorRect.x - rect.x;
+          this.offsetRect.y = this.cursorRect.y - rect.y;
+        }
+        if (this.dragging) {
+          //===============||
+          // DEBUG START
+          // -------------
+          /*
+          document.getElementById('cursor').innerHTML = this.cursorRect.x
+            + ', ' + this.cursorRect.y;
+          document.getElementById('start-rect').innerHTML = this.$_draggingRectX
+            + ', ' + this.$_draggingRectY;
+          document.getElementById('cur-rect').innerHTML = rect.x + ', ' + rect.y;
+          document.getElementById('offset').innerHTML = this.offsetRect.x
+            + ', ' + this.offsetRect.y;
+          */
+          // -------------
+          // DUBUG END
+          //===============||
+          this.instance.x = this.cursorRect.x - this.offsetRect.x;
+          this.instance.y = this.cursorRect.y - this.offsetRect.y;
+        }
+      },
+
+      onDragend(evt) {
+        this.dragging = false;
+        document.removeEventListener('dragover', this.documentDragoverHandler);
+        this.$_draggingRectX = null;
+        this.$_draggingRectY = null;
+        this.cursorRect.x = null;
+        this.cursorRect.y = null;
+        this.offsetRect.x = null;
+        this.offsetRect.y = null;
+      },
     }
   }
 </script>
@@ -149,6 +266,7 @@
   .bl-window {
     user-select: none;
     overflow: hidden;
+    background-color: #e2dfde;
   }
 
   .bl-window .title-bar {
@@ -156,6 +274,11 @@
     background-color: #e2dfde;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+  }
+
+  .bl-window .title-bar:active {
+    cursor: move;
   }
 
   .bl-window .title-bar.indicator {
@@ -166,6 +289,10 @@
     height: 21px;
     width: 21px;
     border-radius: 25px;
+  }
+
+  .bl-window .title-bar .title {
+    text-shadow: 0 0 10px #ffffff;
   }
 
   .main-window {

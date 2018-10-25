@@ -1,5 +1,6 @@
 <template>
   <bl-window class="bl-alert" ref="window"
+    :instance="instance"
     :hasButtonWindowClose="false"
     @windowBlink="onWindowBlink">
     <template slot="body">

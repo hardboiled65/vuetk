@@ -45,6 +45,7 @@
       <!-- Editor window -->
       <bl-window
         v-if="showEditor"
+        :instance="editor"
         @windowClose="showEditor = false">
         <textarea
           v-model="selectedFile.data">
@@ -61,7 +62,7 @@ import BlButton from '@/components/BlButton'
 import BlView from '@/components/BlView'
 import BlBrowser from '@/components/BlBrowser'
 
-import { Alert } from '@/classes/Window'
+import { ApplicationWindow, Alert } from '@/classes/Window'
 import Menu from '@/classes/Menu'
 import MenuItem from '@/classes/MenuItem'
 import Button from '@/classes/Button'
@@ -93,6 +94,7 @@ export default {
     newFolderButton: null,
     editButton: null,
     alert: null,
+    editor: null,
     //===============
     // State
     //===============
@@ -160,6 +162,9 @@ export default {
     this.editButton.title = 'Edit';
     this.editButton.action = this.editAction;
 
+    // Set windows
+    this.createEditor();
+
     // Set directory structure
     this.root.children.push({
       type: 'folder',
@@ -187,6 +192,15 @@ export default {
   },
 
   methods: {
+    //===================
+    // Initialize views
+    //===================
+    createEditor() {
+      this.editor = new ApplicationWindow(1);
+    },
+
+    // File handling
+    //===================
     findFile(path) {
       let dir = this.root;
       if (path === '/') {

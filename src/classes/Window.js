@@ -6,9 +6,41 @@ const WindowType = {
 
 import Button from './Button'
 
-class Alert {
+class ApplicationWindow {
+  constructor(type) {
+    this._type = type;
+    this._x = 0;
+    this._y = 0;
+  }
+
+  //==================
+  // Getters/Setters
+  //==================
+  get type() {
+    return this._type;
+  }
+
+  get x() {
+    return this._x;
+  }
+
+  set x(posX) {
+    this._x = posX;
+  }
+
+  get y() {
+    return this._y;
+  }
+
+  set y(posY) {
+    this._y = posY;
+  }
+}
+
+class Alert extends ApplicationWindow {
   constructor(message=null, informativeText='This is an alert.') {
-    this._type = WindowType.AlertWindow;
+    super(WindowType.AlertWindow);
+    // this._type = WindowType.AlertWindow;
     this._message = message;
     this._informativeText = informativeText;
     this._buttons = [];
@@ -20,7 +52,7 @@ class Alert {
     this._buttons[1].title = 'Cancel';
   }
 
-  //=================
+  //==================
   // Getters/Setters
   //==================
   get message() {
@@ -45,5 +77,6 @@ class Alert {
 }
 
 export {
+  ApplicationWindow,
   Alert,
 }
