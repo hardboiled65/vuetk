@@ -4,6 +4,12 @@ const WindowType = {
   AlertWindow: 2,
 }
 
+const WindowState = {
+  Main: 0,
+  Key: 1,
+  Inactive: 2,
+}
+
 import Button from './Button'
 
 class ApplicationWindow {

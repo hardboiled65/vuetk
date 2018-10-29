@@ -9,6 +9,9 @@
     <div class="title-bar" ref="titleBar"
       v-if="!mainWindow"
       draggable="true"
+      @mousedown.stop="onMousedown($event)"
+      @mousemove="onMousemove($event)"
+      @mouseup.stop="onMouseup($event)"
       @dragstart="onDragstart($event)"
       @drag="onDrag($event)"
       @dragend.prevent="onDragend($event)"
@@ -88,7 +91,7 @@
 
     data: () => ({
       title: 'App',
-      dragging: false,
+      moving: false,
 
       documentDragoverHandler: null,
       cursorRect: {
@@ -100,6 +103,7 @@
         y: null
       },
       wtf: 'wtf?',
+      movingImpl: 1, // 0: mousedown, 1: dragstart
     }),
 
     computed: {
@@ -157,7 +161,9 @@
         }
         // Capture when modal opened.
         if (this.$bl.app.modal) {
-          const path = evt.composedPath();
+          const path = evt.composedPath
+            ? evt.composedPath()
+            : this.$_composedPath(evt);
           for (let i = 0; i < path.length; ++i) {
             if (path[i].className && path[i].className.includes('bl-alert')) {
               return;
@@ -194,14 +200,72 @@
         console.log('test', evt);
       },
 
+      /**
+       * Polyfill for Event.prototype.composedPath.
+       */
+      $_composedPath(evt) {
+        let path = [];
+        let el = evt.target;
+        while (el) {
+          path.push(el);
+          el = el.parentElement;
+        }
+        return path;
+      },
+
+      onMousedown(evt) {
+        this.moving = true;
+
+        this.cursorRect.x = evt.clientX;
+        this.cursorRect.y = evt.clientY;
+
+        if (this.movingImpl !== 0) {
+          return;
+        }
+        const rect = this.$refs.titleBar.getBoundingClientRect();
+        this.offsetRect.x = this.cursorRect.x - rect.x;
+        this.offsetRect.y = this.cursorRect.y - rect.y;
+      },
+
+      onMousemove(evt) {
+        if (this.movingImpl !== 0) {
+          return;
+        }
+        if (!this.moving) {
+          return;
+        }
+
+        this.cursorRect.x = evt.clientX;
+        this.cursorRect.y = evt.clientY;
+
+        const rect = this.$refs.titleBar.getBoundingClientRect();
+        this.instance.x = this.cursorRect.x - this.offsetRect.x;
+        this.instance.y = this.cursorRect.y - this.offsetRect.y;
+      },
+
+      onMouseup(evt) {
+        if (this.movingImpl !== 0) {
+          return;
+        }
+        this.moving = false;
+      },
+
       onDragstart(evt) {
-        this.dragging = true;
+        if (this.movingImpl !== 1) {
+          evt.preventDefault();
+          return;
+        }
+
+        this.moving = true;
         const rect = evt.target.getBoundingClientRect();
         // console.log('dragstart', this.$_draggingRectX, this.$_draggingRectY);
         let ghost = document.createElement('img');
         // Transparent, 1px png for overwrite default image.
         ghost.setAttribute('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAC0lEQVQImWNgAAIAAAUAAWJVMogAAAAASUVORK5CYII=');
         evt.dataTransfer.setDragImage(ghost, 0, 0);
+        if (evt.dataTransfer.setDragImage) {
+          evt.dataTransfer.setDragImage(ghost, 0, 0);
+        }
         evt.dataTransfer.effectAllowed = 'move';
         evt.dataTransfer.setData('Text', 'dragging');
         this.documentDragoverHandler = document.addEventListener(
@@ -212,15 +276,18 @@
       },
 
       onDrag(evt) {
+        if (this.movingImpl !== 1)
+          return;
+
         if (!this.cursorRect.x) {
           return;
         }
         const rect = evt.target.getBoundingClientRect();
         if (this.offsetRect.x === null) {
-          this.offsetRect.x = this.cursorRect.x - rect.x;
-          this.offsetRect.y = this.cursorRect.y - rect.y;
+          this.offsetRect.x = this.cursorRect.x - (rect.x || rect.left);
+          this.offsetRect.y = this.cursorRect.y - (rect.y || rect.top);
         }
-        if (this.dragging) {
+        if (this.moving) {
           //===============||
           // DEBUG START
           // -------------
@@ -242,7 +309,10 @@
       },
 
       onDragend(evt) {
-        this.dragging = false;
+        if (this.movingImpl !== 1)
+          return;
+
+        this.moving = false;
         document.removeEventListener('dragover', this.documentDragoverHandler);
         this.cursorRect.x = null;
         this.cursorRect.y = null;

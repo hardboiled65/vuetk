@@ -10,6 +10,9 @@
         <bl-button
           :instance="newFolderButton">
         </bl-button>
+        <bl-segmented-control
+          :instance="moveSegments">
+        </bl-segmented-control>
       </template>
       <!-- Window body -->
       <template slot="body">
@@ -61,6 +64,7 @@ import BlAlert from '@/components/BlAlert'
 import BlButton from '@/components/BlButton'
 import BlView from '@/components/BlView'
 import BlBrowser from '@/components/BlBrowser'
+import BlSegmentedControl from '@/components/BlSegmentedControl'
 
 import { ApplicationWindow, Alert } from '@/classes/Window'
 import Menu from '@/classes/Menu'
@@ -68,6 +72,7 @@ import MenuItem from '@/classes/MenuItem'
 import Button from '@/classes/Button'
 import Browser from '@/classes/Browser'
 import Icon from '@/classes/Icon'
+import SegmentedControl from '@/classes/SegmentedControl'
 
 export default {
   name: 'app',
@@ -77,6 +82,7 @@ export default {
     BlButton,
     BlView,
     BlBrowser,
+    BlSegmentedControl,
   },
 
   data: () => ({
@@ -95,6 +101,7 @@ export default {
     editButton: null,
     alert: null,
     editor: null,
+    moveSegments: null,
     //===============
     // State
     //===============
@@ -137,6 +144,11 @@ export default {
     this.menus[2].items[2].action = () => {
       this.showAbout = true;
     }
+
+    // Set segmented controls
+    this.moveSegments = new SegmentedControl();
+    this.moveSegments.addSegment().label = 'Back';
+    this.moveSegments.addSegment().label = 'Forward';
 
     // Set alert
     this.alert = new Alert();
