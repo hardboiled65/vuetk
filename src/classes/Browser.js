@@ -1,6 +1,7 @@
 class Browser {
   static Column() {
     this.rows = [];
+    this.width = 100;
     return this;
   }
 

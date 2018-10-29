@@ -70,4 +70,9 @@
     background-color: #9999ff;
     color: white;
   }
+
+  .resize-area {
+    width: 5px;
+    background-color: black;
+  }
 </style>

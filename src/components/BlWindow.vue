@@ -10,8 +10,8 @@
       v-if="!mainWindow"
       draggable="true"
       @dragstart="onDragstart($event)"
+      @drag="onDrag($event)"
       @dragend.prevent="onDragend($event)"
-      @drag="onDragging($event)"
       @click="captureAll($event)"> <!-- ??? -->
       <div class="buttons">
         <button
@@ -95,8 +95,6 @@
         x: null,
         y: null
       },
-      $_draggingRectX: null,
-      $_draggingRectY: null,
       offsetRect: {
         x: null,
         y: null
@@ -199,10 +197,10 @@
       onDragstart(evt) {
         this.dragging = true;
         const rect = evt.target.getBoundingClientRect();
-        this.$_draggingRectX = rect.x;
-        this.$_draggingRectY = rect.y;
         // console.log('dragstart', this.$_draggingRectX, this.$_draggingRectY);
         let ghost = document.createElement('img');
+        // Transparent, 1px png for overwrite default image.
+        ghost.setAttribute('src', 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAC0lEQVQImWNgAAIAAAUAAWJVMogAAAAASUVORK5CYII=');
         evt.dataTransfer.setDragImage(ghost, 0, 0);
         evt.dataTransfer.effectAllowed = 'move';
         evt.dataTransfer.setData('Text', 'dragging');
@@ -213,7 +211,7 @@
           });
       },
 
-      onDragging(evt) {
+      onDrag(evt) {
         if (!this.cursorRect.x) {
           return;
         }
@@ -246,8 +244,6 @@
       onDragend(evt) {
         this.dragging = false;
         document.removeEventListener('dragover', this.documentDragoverHandler);
-        this.$_draggingRectX = null;
-        this.$_draggingRectY = null;
         this.cursorRect.x = null;
         this.cursorRect.y = null;
         this.offsetRect.x = null;
