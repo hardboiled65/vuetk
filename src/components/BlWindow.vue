@@ -163,7 +163,9 @@
         }
         // Capture when modal opened.
         if (this.$bl.app.modal) {
-          const path = evt.composedPath();
+          const path = evt.composedPath
+            ? evt.composedPath()
+            : this.$_composedPath(evt);
           for (let i = 0; i < path.length; ++i) {
             if (path[i].className && path[i].className.includes('bl-alert')) {
               return;
@@ -200,12 +202,28 @@
         console.log('test', evt);
       },
 
+      /**
+       * Polyfill for Event.prototype.composedPath.
+       */
+      $_composedPath(evt) {
+        let path = [];
+        let el = evt.target;
+        while (el) {
+          path.push(el);
+          el = el.parentElement;
+        }
+        return path;
+      },
+
       onMousedown(evt) {
         this.moving = true;
 
         this.cursorRect.x = evt.clientX;
         this.cursorRect.y = evt.clientY;
 
+        if (this.movingImpl !== 0) {
+          return;
+        }
         const rect = this.$refs.titleBar.getBoundingClientRect();
         this.offsetRect.x = this.cursorRect.x - rect.x;
         this.offsetRect.y = this.cursorRect.y - rect.y;
@@ -232,7 +250,6 @@
           return;
         }
         this.moving = false;
-        console.log('mouseup');
       },
 
       onDragstart(evt) {
@@ -247,7 +264,9 @@
         this.$_draggingRectY = rect.y;
         // console.log('dragstart', this.$_draggingRectX, this.$_draggingRectY);
         let ghost = document.createElement('img');
-        evt.dataTransfer.setDragImage(ghost, 0, 0);
+        if (evt.dataTransfer.setDragImage) {
+          evt.dataTransfer.setDragImage(ghost, 0, 0);
+        }
         evt.dataTransfer.effectAllowed = 'move';
         evt.dataTransfer.setData('Text', 'dragging');
         this.documentDragoverHandler = document.addEventListener(
@@ -266,8 +285,8 @@
         }
         const rect = evt.target.getBoundingClientRect();
         if (this.offsetRect.x === null) {
-          this.offsetRect.x = this.cursorRect.x - rect.x;
-          this.offsetRect.y = this.cursorRect.y - rect.y;
+          this.offsetRect.x = this.cursorRect.x - (rect.x || rect.left);
+          this.offsetRect.y = this.cursorRect.y - (rect.y || rect.top);
         }
         if (this.moving) {
           //===============||
