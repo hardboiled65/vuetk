@@ -9,6 +9,9 @@
     <div class="title-bar" ref="titleBar"
       v-if="!mainWindow"
       draggable="true"
+      @mousedown.stop="onMousedown($event)"
+      @mousemove="onMousemove($event)"
+      @mouseup.stop="onMouseup($event)"
       @dragstart="onDragstart($event)"
       @dragend.prevent="onDragend($event)"
       @drag="onDragging($event)"
@@ -88,7 +91,7 @@
 
     data: () => ({
       title: 'App',
-      dragging: false,
+      moving: false,
 
       documentDragoverHandler: null,
       cursorRect: {
@@ -102,6 +105,7 @@
         y: null
       },
       wtf: 'wtf?',
+      movingImpl: 1, // 0: mousedown, 1: dragstart
     }),
 
     computed: {
@@ -196,8 +200,48 @@
         console.log('test', evt);
       },
 
+      onMousedown(evt) {
+        this.moving = true;
+
+        this.cursorRect.x = evt.clientX;
+        this.cursorRect.y = evt.clientY;
+
+        const rect = this.$refs.titleBar.getBoundingClientRect();
+        this.offsetRect.x = this.cursorRect.x - rect.x;
+        this.offsetRect.y = this.cursorRect.y - rect.y;
+      },
+
+      onMousemove(evt) {
+        if (this.movingImpl !== 0) {
+          return;
+        }
+        if (!this.moving) {
+          return;
+        }
+
+        this.cursorRect.x = evt.clientX;
+        this.cursorRect.y = evt.clientY;
+
+        const rect = this.$refs.titleBar.getBoundingClientRect();
+        this.instance.x = this.cursorRect.x - this.offsetRect.x;
+        this.instance.y = this.cursorRect.y - this.offsetRect.y;
+      },
+
+      onMouseup(evt) {
+        if (this.movingImpl !== 0) {
+          return;
+        }
+        this.moving = false;
+        console.log('mouseup');
+      },
+
       onDragstart(evt) {
-        this.dragging = true;
+        if (this.movingImpl !== 1) {
+          evt.preventDefault();
+          return;
+        }
+
+        this.moving = true;
         const rect = evt.target.getBoundingClientRect();
         this.$_draggingRectX = rect.x;
         this.$_draggingRectY = rect.y;
@@ -214,6 +258,9 @@
       },
 
       onDragging(evt) {
+        if (this.movingImpl !== 1)
+          return;
+
         if (!this.cursorRect.x) {
           return;
         }
@@ -222,7 +269,7 @@
           this.offsetRect.x = this.cursorRect.x - rect.x;
           this.offsetRect.y = this.cursorRect.y - rect.y;
         }
-        if (this.dragging) {
+        if (this.moving) {
           //===============||
           // DEBUG START
           // -------------
@@ -244,7 +291,10 @@
       },
 
       onDragend(evt) {
-        this.dragging = false;
+        if (this.movingImpl !== 1)
+          return;
+
+        this.moving = false;
         document.removeEventListener('dragover', this.documentDragoverHandler);
         this.$_draggingRectX = null;
         this.$_draggingRectY = null;
