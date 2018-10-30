@@ -57,7 +57,7 @@
   import BlMenuBar from './BlMenuBar'
   import BlWindowToolbar from './BlWindowToolbar'
 
-  import { ApplicationWindow } from '@/classes/Window'
+  import { ApplicationWindow } from '../classes/Window'
 
   export default {
     name: 'bl-window',
@@ -102,7 +102,6 @@
         x: null,
         y: null
       },
-      wtf: 'wtf?',
       movingImpl: 1, // 0: mousedown, 1: dragstart
     }),
 

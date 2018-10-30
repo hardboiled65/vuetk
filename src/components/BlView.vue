@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import ViewMixin from '@/mixins/ViewMixin'
+  import ViewMixin from '../mixins/ViewMixin'
 
   export default {
     name: 'bl-view',

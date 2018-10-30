@@ -18,9 +18,9 @@
 </template>
 
 <script>
-  import Menu from '@/classes/Menu'
+  import BlMenuItem from './BlMenuItem'
 
-  import BlMenuItem from '@/components/BlMenuItem'
+  import Menu from '../classes/Menu'
 
   export default {
     name: 'bl-menu',

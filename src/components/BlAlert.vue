@@ -19,11 +19,11 @@
 </template>
 
 <script>
-  import BlWindow from '@/components/BlWindow'
-  import BlButton from '@/components/BlButton'
+  import BlWindow from './BlWindow'
+  import BlButton from './BlButton'
 
-  import { Alert } from '@/classes/Window'
-  import Button from '@/classes/Button'
+  import { Alert } from '../classes/Window'
+  import Button from '../classes/Button'
 
   export default {
     name: 'bl-alert',

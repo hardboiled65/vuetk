@@ -1,13 +1,14 @@
 {
-  "name": "vuetk",
+  "name": "@hardboiled65/vuetk",
   "version": "0.0.1",
   "description": "Vue Widget Toolkit",
   "author": "hardboiled65",
   "license": "MIT",
   "private": false,
+  "main": "src/index.js",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build --target lib --name vuetk vuetk.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

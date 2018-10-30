@@ -8,9 +8,9 @@
 </template>
 
 <script>
-  import ViewMixin from '@/mixins/ViewMixin'
+  import ViewMixin from '../mixins/ViewMixin'
 
-  import Button from '@/classes/Button'
+  import Button from '../classes/Button'
 
   export default {
     name: 'bl-button',

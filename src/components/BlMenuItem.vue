@@ -11,9 +11,9 @@
 </template>
 
 <script>
-  import ViewMixin from '@/mixins/ViewMixin'
+  import ViewMixin from '../mixins/ViewMixin'
 
-  import MenuItem from '@/classes/MenuItem'
+  import MenuItem from '../classes/MenuItem'
 
   export default {
     name: 'bl-menu-item',

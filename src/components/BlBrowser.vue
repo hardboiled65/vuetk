@@ -18,11 +18,11 @@
 </template>
 
 <script>
-  import BlView from '@/components/BlView'
+  import BlView from './BlView'
 
-  import ViewMixin from '@/mixins/ViewMixin'
+  import ViewMixin from '../mixins/ViewMixin'
 
-  import Browser from '@/classes/Browser'
+  import Browser from '../classes/Browser'
   document.Browser = Browser;
 
   export default {
