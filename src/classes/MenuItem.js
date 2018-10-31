@@ -3,6 +3,7 @@ class MenuItem {
     this._title = title;
     this._isSeparator = false;
     this._action = null;
+    this._submenu = null;
   }
 
   //==================
@@ -29,6 +30,10 @@ class MenuItem {
   //==================
   isSeparator() {
     return this._isSeparator;
+  }
+
+  hasSubmenu() {
+    return (this._submenu === null);
   }
 
   //==================
