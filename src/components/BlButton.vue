@@ -1,5 +1,6 @@
 <template>
   <button class="bl-button"
+    v-if="instance"
     :class="buttonClass"
     @click="instance.action">
       <span

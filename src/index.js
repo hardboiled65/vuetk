@@ -19,10 +19,22 @@ import BlSegmentedControl from './components/BlSegmentedControl'
 // Classes
 //===============
 import { ApplicationWindow, Alert } from './classes/Window'
+import Menu from './classes/Menu'
+import MenuItem from './classes/MenuItem'
+import Button from './classes/Button'
+import SegmentedControl from './classes/SegmentedControl'
+import Icon from './classes/Icon'
+import Browser from './classes/Browser'
 
-const bl = {
-  ApplicationWindow: ApplicationWindow,
-  Alert: Alert,
+export {
+  ApplicationWindow,
+  Alert,
+  Menu,
+  MenuItem,
+  Button,
+  SegmentedControl,
+  Icon,
+  Browser,
 }
 
 export default {
@@ -37,6 +49,11 @@ export default {
     Vue.component(BlMenuItem.name, BlMenuItem);
     Vue.component(BlButton.name, BlButton);
     Vue.component(BlSegmentedControl.name, BlSegmentedControl);
+
+    Vue.prototype.$bl = {
+      Button: Button,
+      Menu: Menu,
+    };
   },
-  bl: bl,
 }
+

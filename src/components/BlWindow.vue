@@ -107,7 +107,12 @@
 
     computed: {
       mainWindow() {
-        return this.$parent.$parent === this.$root;
+        return (this.$parent.$parent === this.$root) ||
+          (this.$parent.mainView === true);
+      },
+
+      hasMenuBar() {
+        return Boolean(this.$slots.menuBar);
       },
 
       hasToolbar() {
@@ -133,7 +138,10 @@
     },
 
     created() {
-      document.title = this.title;
+      this.$emit('_load');
+      if (this.mainWindow) {
+        document.title = this.title;
+      }
     },
 
     mounted() {
