@@ -1,13 +1,15 @@
 <template>
   <div class="bl-menu-bar"
-    :class="{
-    }">
-    <bl-menu
+    :class="{}">
+    <!-- <bl-menu
       v-for="(menu, idx) in menus" :key="idx"
       :opened="idx === openedMenuIndex"
       :instance="menu"
       @click="onClickMenu(idx)"
       @mouseenter="onMouseenterMenu(idx)">
+    </bl-menu> -->
+    <bl-menu
+      :instance="menu">
     </bl-menu>
   </div>
 </template>
@@ -16,6 +18,8 @@
   import BlMenu from './BlMenu'
 
   import ViewMixin from '../mixins/ViewMixin'
+
+  import Menu from '../classes/Menu'
 
   export default {
     name: 'bl-menu-bar',
@@ -31,6 +35,11 @@
     props: {
       menus: {
         type: Array,
+        required: true
+      },
+
+      menu: {
+        type: Menu,
         required: true
       },
     },
@@ -57,8 +66,10 @@
       onClickMenu(idx) {
         if (this.openedMenuIndex === idx) {
           this.$bl.app.menu = null;
+          this.$bl.state.menuOpened = false;
         } else {
           this.$bl.app.menu = this.menus[idx];
+          this.$bl.state.menuOpened = true;
         }
       },
 

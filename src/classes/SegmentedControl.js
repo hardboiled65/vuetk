@@ -1,5 +1,6 @@
 class SegmentedControl {
   static Segment() {
+    this.image = null;
     this.label = '';
     return this;
   }

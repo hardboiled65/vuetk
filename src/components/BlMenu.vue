@@ -3,17 +3,25 @@
     :class="{
       'menu-bar-menu': type === $bl.Menu.MenuType.MenuBarMenu,
       'context-menu': type === $bl.Menu.MenuType.ContextMenu,
-      'opened': opened,
+      'opened': false,
+      'submenu': type === $bl.Menu.MenuType.Submenu,
     }"
     @click="$emit('click')"
-    @mouseenter="$emit('mouseenter')">{{ instance.title }}
-    <div class="menu-item-container"
+    @mouseenter="$emit('mouseenter')">
+    <!-- <div class="menu-item-container"
       v-if="opened">
       <bl-menu-item
         v-for="item in instance.items" :key="item.title"
         :instance="item">
       </bl-menu-item>
-    </div>
+    </div> -->
+    <bl-menu-item
+      v-for="(item, idx) in instance.items" :key="idx"
+      :instance="item"
+      :focused="idx === focusedItemIndex"
+      @focusin="onFocusinItem(idx)"
+      @focusout="onFocusoutItem(idx)">
+    </bl-menu-item>
   </div>
 </template>
 
@@ -30,11 +38,6 @@
     },
 
     props: {
-      opened: {
-        type: Boolean,
-        required: true
-      },
-
       instance: {
         type: Menu,
         required: true
@@ -42,18 +45,28 @@
     },
 
     data: () => ({
+      focusedItemIndex: null,
     }),
 
     computed: {
       type() {
         return this.instance.type;
-      }
+      },
     },
 
     methods: {
       test() {
+        // eslint-disable-next-line
         console.log('test');
-      }
+      },
+
+      onFocusinItem(idx) {
+        this.focusedItemIndex = idx;
+      },
+
+      onFocusoutItem(idx) {
+        this.focusedItemIndex = null;
+      },
     }
   }
 </script>
@@ -73,6 +86,14 @@
 
   .bl-menu.menu-bar-menu.opened {
     background-color: green;
+  }
+
+  .bl-menu.submenu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 30px;
+    background-color: lightgrey;
   }
 
   .opened .menu-item-container {

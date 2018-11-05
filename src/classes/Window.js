@@ -41,6 +41,17 @@ class ApplicationWindow {
   set y(posY) {
     this._y = posY;
   }
+
+  //=================
+  // Constants
+  //=================
+  static get WindowType() {
+    return WindowType;
+  }
+
+  static get WindowState() {
+    return WindowState;
+  }
 }
 
 class Alert extends ApplicationWindow {

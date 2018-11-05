@@ -1,6 +1,7 @@
-<template>
+<template lang="blui">
   <bl-window ref="mainWindow"
     :menus="menus"
+    :menu="mainMenu"
     @_load="() => {
       upButton = new $bl.Button();
       upButton.title = 'Up';
@@ -8,15 +9,21 @@
     }">
     <!-- Window toolbar -->
     <template slot="toolbar">
-      <bl-button
-        :instance="upButton">
-      </bl-button>
-      <bl-button
-        :instance="newFolderButton">
-      </bl-button>
-      <bl-segmented-control
-        :instance="moveSegments">
-      </bl-segmented-control>
+      <bl-toolbar-item label="Up">
+        <bl-button
+          :instance="upButton">
+        </bl-button>
+      </bl-toolbar-item>
+      <bl-toolbar-item label="New Folder">
+        <bl-button
+          :instance="newFolderButton">
+        </bl-button>
+      </bl-toolbar-item>
+      <bl-toolbar-item label="Move">
+        <bl-segmented-control
+          :instance="moveSegments">
+        </bl-segmented-control>
+      </bl-toolbar-item>
     </template>
     <!-- Window body -->
     <template slot="body">
@@ -86,6 +93,7 @@
       //===============
       // Views
       //===============
+      mainMenu: null,
       browser: null,
       upButton: null,
       newFolderButton: null,
@@ -109,7 +117,7 @@
     }),
 
     watch: {
-      selectedDir(newValue) {
+      selectedDir(/*newValue*/) {
         this.setRows();
       },
     },
@@ -124,6 +132,30 @@
       this.$bl.app = this;
 
       // Set menus
+      this.mainMenu = new Menu(Menu.MenuType.MenuBarMenu, 'MainMenu');
+
+      this.mainMenu.items.push(new MenuItem('File'));
+      let menuItemFile = this.mainMenu.items[0];
+      menuItemFile.submenu = new Menu(Menu.MenuType.Submenu, 'File');
+      menuItemFile.submenu.items.push(new MenuItem('New Text File'));
+      menuItemFile.submenu.items[0].action = this.newTextFileAction;
+
+      this.mainMenu.items.push(new MenuItem('Edit'));
+      let menuItemEdit = this.mainMenu.items[1];
+      menuItemEdit.submenu = new Menu(Menu.MenuType.Submenu, 'Edit');
+      menuItemEdit.submenu.items.push(new MenuItem('Delete'));
+      menuItemEdit.submenu.items[0].action = this.deleteFileAction;
+
+      this.mainMenu.items.push(new MenuItem('Help'));
+      let menuItemHelp = this.mainMenu.items[2];
+      menuItemHelp.submenu = new Menu(Menu.MenuType.Submenu, 'Help');
+      menuItemHelp.submenu.items.push(new MenuItem('Handbook'));
+      menuItemHelp.submenu.items.push(new MenuItem('About'));
+      menuItemHelp.submenu.items[1].action = () => {
+        this.showAbout = true;
+      }
+
+      // Old
       this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'File'));
       this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'Edit'));
       this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'Help'));
@@ -236,7 +268,9 @@
       },
 
       enterDir(path) {
+        // eslint-disable-next-line
         console.log('enter', path);
+        // eslint-disable-next-line
         const dir = this.findFile(path);
         this.pwd = path;
         window.location.replace(window.location.origin + '#' + this.pwd)
@@ -329,7 +363,8 @@
       },
 
       onSelectColumn(col) {
-        // console.log('col', col);
+        // eslint-disable-next-line
+        console.log('col', col);
       },
 
       onSelectRow(col, row) {

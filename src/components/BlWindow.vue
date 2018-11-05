@@ -1,11 +1,12 @@
 <template>
-  <div class="bl-window"
+  <div class="bl-window" tabindex="0"
     :class="{
       'main-window': mainWindow,
       'sub-window': !mainWindow,
     }"
     :style="windowStyle"
-    @click.capture="captureAll($event)">
+    @click.capture="captureAll($event)"
+    @keypress.down="onKeypressDown">
     <div class="title-bar" ref="titleBar"
       v-if="!mainWindow"
       draggable="true"
@@ -17,24 +18,27 @@
       @dragend.prevent="onDragend($event)"
       @click="captureAll($event)"> <!-- ??? -->
       <div class="buttons">
-        <button
+        <button class="button-window-close"
           v-if="setButtonWindowClose"
           @click="$emit('windowClose')"
-          @mousedown.stop.prevent>X</button>
-        <button
+          @mousedown.stop>X</button>
+        <button class="button-window-minimize"
           v-if="setButtonWindowMinimize"
-          @mousedown.stop.prevent>-</button>
+          @click="$emit('windowMinimize')"
+          @mousedown.stop>-</button>
       </div>
       <span class="title">{{ title }}</span>
       <div class="right-space">
       </div>
     </div>
     <bl-menu-bar
-      v-if="menus"
-      :menus="menus">
+      v-if="menus && menu"
+      :menus="menus"
+      :menu="menu">
     </bl-menu-bar>
     <bl-window-toolbar
-      v-if="hasToolbar">
+      v-if="hasToolbar"
+      :instance="toolbar">
       <slot name="toolbar">
       </slot>
     </bl-window-toolbar>
@@ -58,6 +62,8 @@
   import BlWindowToolbar from './BlWindowToolbar'
 
   import { ApplicationWindow } from '../classes/Window'
+  import Menu from '../classes/Menu'
+  import Toolbar from '../classes/Toolbar'
 
   export default {
     name: 'bl-window',
@@ -78,6 +84,11 @@
         default: null
       },
 
+      menu: {
+        type: Menu,
+        default: null
+      },
+
       setButtonWindowClose: {
         type: Boolean,
         default: true
@@ -92,6 +103,7 @@
     data: () => ({
       title: 'App',
       moving: false,
+      toolbar: null,
 
       documentDragoverHandler: null,
       cursorRect: {
@@ -133,7 +145,9 @@
 
     watch: {
       title(newVal) {
-        document.title = newVal;
+        if (this.mainWindow) {
+          document.title = newVal;
+        }
       },
     },
 
@@ -141,6 +155,10 @@
       this.$emit('_load');
       if (this.mainWindow) {
         document.title = this.title;
+      }
+
+      if (this.hasToolbar) {
+        this.toolbar = new Toolbar();
       }
     },
 
@@ -153,7 +171,7 @@
     methods: {
       captureAll(evt) {
         // Capture when menu opened.
-        if (this.$bl.app.menu) {
+        if (this.$bl.state.menuOpened) {
           if (evt.target.className === 'bl-menu-item-node') {
             if (!evt.target.parentNode.className.includes('enabled')) {
               evt.stopPropagation();
@@ -164,6 +182,7 @@
             return;
           }
           this.$bl.app.menu = null;
+          this.$bl.state.menuOpened = false;
           // evt.stopPropagation();
         }
         // Capture when modal opened.
@@ -245,7 +264,7 @@
         this.cursorRect.x = evt.clientX;
         this.cursorRect.y = evt.clientY;
 
-        const rect = this.$refs.titleBar.getBoundingClientRect();
+        // const rect = this.$refs.titleBar.getBoundingClientRect();
         this.instance.x = this.cursorRect.x - this.offsetRect.x;
         this.instance.y = this.cursorRect.y - this.offsetRect.y;
       },
@@ -264,7 +283,7 @@
         }
 
         this.moving = true;
-        const rect = evt.target.getBoundingClientRect();
+        // const rect = evt.target.getBoundingClientRect();
         // console.log('dragstart', this.$_draggingRectX, this.$_draggingRectY);
         let ghost = document.createElement('img');
         // Transparent, 1px png for overwrite default image.
@@ -326,6 +345,15 @@
         this.offsetRect.x = null;
         this.offsetRect.y = null;
       },
+
+      //=======================
+      // Keyboard events
+      //=======================
+      onKeypressDown() {
+        if (this.$bl.state.menuOpened) {
+          console.log('menu down');
+        }
+      },
     }
   }
 </script>
@@ -370,6 +398,10 @@
     height: 21px;
     width: 21px;
     border-radius: 25px;
+  }
+
+  .bl-window .title-bar button:active {
+    background-color: green;
   }
 
   .bl-window .title-bar .title {

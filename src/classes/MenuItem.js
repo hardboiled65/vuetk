@@ -25,6 +25,14 @@ class MenuItem {
     this._action = action;
   }
 
+  get submenu() {
+    return this._submenu;
+  }
+
+  set submenu(menu) {
+    this._submenu = menu;
+  }
+
   //==================
   // Instance methods
   //==================
@@ -33,7 +41,7 @@ class MenuItem {
   }
 
   hasSubmenu() {
-    return (this._submenu === null);
+    return (this._submenu !== null);
   }
 
   //==================
