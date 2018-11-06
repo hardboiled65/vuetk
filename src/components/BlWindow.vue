@@ -32,9 +32,8 @@
       </div>
     </div>
     <bl-menu-bar
-      v-if="menus && menu"
-      :menus="menus"
-      :menu="menu">
+      v-if="hasMenuBar">
+      <slot name="menuBar"></slot>
     </bl-menu-bar>
     <bl-window-toolbar
       v-if="hasToolbar"
@@ -77,16 +76,6 @@
       instance: {
         type: ApplicationWindow,
         required: false
-      },
-
-      menus: {
-        type: Array,
-        default: null
-      },
-
-      menu: {
-        type: Menu,
-        default: null
       },
 
       setButtonWindowClose: {

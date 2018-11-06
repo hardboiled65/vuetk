@@ -1,16 +1,7 @@
 <template>
   <div class="bl-menu-bar"
     :class="{}">
-    <!-- <bl-menu
-      v-for="(menu, idx) in menus" :key="idx"
-      :opened="idx === openedMenuIndex"
-      :instance="menu"
-      @click="onClickMenu(idx)"
-      @mouseenter="onMouseenterMenu(idx)">
-    </bl-menu> -->
-    <bl-menu
-      :instance="menu">
-    </bl-menu>
+    <slot></slot>
   </div>
 </template>
 
@@ -33,15 +24,6 @@
     ],
 
     props: {
-      menus: {
-        type: Array,
-        required: true
-      },
-
-      menu: {
-        type: Menu,
-        required: true
-      },
     },
 
     data: () => ({

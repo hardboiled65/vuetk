@@ -1,12 +1,11 @@
 <template lang="blui">
-  <bl-window ref="mainWindow"
-    :menus="menus"
-    :menu="mainMenu"
-    @_load="() => {
-      upButton = new $bl.Button();
-      upButton.title = 'Up';
-      upButton.action = onClickUpButton;
-    }">
+  <bl-window ref="mainWindow">
+    <!-- Window menu bar -->
+    <template slot="menuBar">
+      <bl-menu
+        :instance="mainMenu">
+      </bl-menu>
+    </template>
     <!-- Window toolbar -->
     <template slot="toolbar">
       <bl-toolbar-item label="Up">
@@ -191,9 +190,9 @@
       this.browser.addColumn();
 
       // Set buttons
-      // this.upButton = new Button();
-      // this.upButton.title = 'Up';
-      // this.upButton.action = this.onClickUpButton;
+      this.upButton = new Button();
+      this.upButton.title = 'Up';
+      this.upButton.action = this.onClickUpButton;
 
       this.newFolderButton = new Button();
       this.newFolderButton.title = 'New Folder';
@@ -389,10 +388,6 @@
         } else if (col === 1 && row === null) {
           this.selectedFile = null;
         }
-      },
-
-      onLoad() {
-        console.log('loaded');
       },
 
       //===================
