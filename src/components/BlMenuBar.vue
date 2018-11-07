@@ -30,18 +30,6 @@
     }),
 
     computed: {
-      openedMenuIndex() {
-        if (this.$bl.app.menu === null) {
-          return null;
-        }
-        const found = this.menus.findIndex(m => {
-          return m === this.$bl.app.menu;
-        });
-        if (found > -1) {
-          return found;
-        }
-        return null;
-      },
     },
 
     methods: {

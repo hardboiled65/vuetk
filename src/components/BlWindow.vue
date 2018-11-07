@@ -170,12 +170,12 @@
           if (evt.target.className.split(' ').includes('bl-menu')) {
             return;
           }
-          this.$bl.app.menu = null;
+          // this.$bl.app.menu = null;
           this.$bl.state.menuOpened = false;
           // evt.stopPropagation();
         }
         // Capture when modal opened.
-        if (this.$bl.app.modal) {
+        if (this.$bl.state.modalOpened) {
           const path = evt.composedPath
             ? evt.composedPath()
             : this.$_composedPath(evt);
