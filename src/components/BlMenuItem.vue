@@ -105,10 +105,10 @@
         if (this.menuBarMenuItem) {
           if (!this.focused) {
             this.$emit('focusin');
-            this.$bl.state.menuOpened = true;
+            this.sharedState.menuOpened = true;
           } else {
             this.$emit('focusout');
-            this.$bl.state.menuOpened = false;
+            this.sharedState.menuOpened = false;
           }
         }
         if (this.instance.action) {
@@ -120,7 +120,7 @@
       onMouseenter() {
         if (this.menuBarMenuItem && this.sharedState.menuOpened) {
           this.$emit('focusin');
-        } else if (this.$bl.state.menuOpened) {
+        } else if (this.sharedState.menuOpened) {
           this.$emit('focusin');
         }
       },

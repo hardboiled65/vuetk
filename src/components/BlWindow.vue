@@ -1,12 +1,8 @@
 <template>
   <div class="bl-window" tabindex="0"
-    :class="{
-      'main-window': mainWindow,
-      'sub-window': !mainWindow,
-    }"
+    :class="windowClass"
     :style="windowStyle"
-    @click.capture="captureAll($event)"
-    @keydown="onKeydown">
+    @click.capture="captureAll($event)">
     <div class="title-bar" ref="titleBar"
       v-if="!mainWindow"
       draggable="true"
@@ -35,12 +31,12 @@
       v-if="hasMenuBar">
       <slot name="menuBar"></slot>
     </bl-menu-bar>
-    <bl-window-toolbar
+    <bl-toolbar
       v-if="hasToolbar"
       :instance="toolbar">
       <slot name="toolbar">
       </slot>
-    </bl-window-toolbar>
+    </bl-toolbar>
     <!-- Window's body -->
     <slot name="body">
     </slot>
@@ -58,20 +54,21 @@
 
 <script>
   import BlMenuBar from './BlMenuBar'
-  import BlWindowToolbar from './BlWindowToolbar'
+  import BlToolbar from './BlToolbar'
 
   import ViewMixin from '../mixins/ViewMixin'
 
   import { ApplicationWindow } from '../classes/Window'
   import Menu from '../classes/Menu'
   import Toolbar from '../classes/Toolbar'
+  import Image from '../classes/Image'
 
   export default {
     name: 'bl-window',
 
     components: {
       BlMenuBar,
-      BlWindowToolbar,
+      BlToolbar,
     },
 
     mixins: [
@@ -81,7 +78,9 @@
     props: {
       instance: {
         type: ApplicationWindow,
-        required: false
+        default: () => (
+          new ApplicationWindow(ApplicationWindow.WindowType.MainWindow)
+        )
       },
 
       setButtonWindowClose: {
@@ -123,7 +122,14 @@
       },
 
       hasToolbar() {
-        return Boolean(this.$slots.toolbar);
+        return (Boolean(this.$slots.toolbar) || this.toolbar);
+      },
+
+      windowClass() {
+         return {
+          'main-window': this.mainWindow,
+          'sub-window': !this.mainWindow,
+        };
       },
 
       windowStyle() {
@@ -150,6 +156,10 @@
       this.$emit('_load');
       if (this.mainWindow) {
         document.title = this.title;
+        let favicon = document.createElement('link');
+        favicon.rel = 'icon';
+        favicon.href = Image.SystemImage.ActionTemplate.src('16x16');
+        document.head.appendChild(favicon);
       }
 
       if (this.hasToolbar) {
@@ -158,6 +168,9 @@
     },
 
     mounted() {
+      if (!this.$el.classList.contains('bl-window')) {
+        this.$el.classList.add('bl-window');
+      }
       this.$el.addEventListener('contextmenu', e => {
         e.preventDefault();
       });
@@ -364,14 +377,15 @@
   .bl-view.pointer-events-none {
     pointer-events: none;
   }
-</style>
 
-<style scoped>
   .bl-window {
     user-select: none;
     overflow: hidden;
     background-color: #e2dfde;
   }
+</style>
+
+<style scoped>
 
   .bl-window .title-bar {
     height: 32px;

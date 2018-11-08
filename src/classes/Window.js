@@ -1,7 +1,11 @@
 const WindowType = {
-  MainWindow: 0,
-  PanelWindow: 1,
-  AlertWindow: 2,
+  DocumentWindow: 0,
+  AppWindow: 1,
+  Panel: 2,
+  Dialog: 3,
+  Alert: 4,
+  MainWindow: 10,
+  AlertWindow: 12,
 }
 
 const WindowState = {
@@ -91,6 +95,8 @@ class Alert extends ApplicationWindow {
   get buttons() {
     return this._buttons;
   }
+
+  runModal() {}
 }
 
 export {

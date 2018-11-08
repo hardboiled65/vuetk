@@ -23,7 +23,6 @@
   import ViewMixin from '../mixins/ViewMixin'
 
   import Browser from '../classes/Browser'
-  document.Browser = Browser;
 
   export default {
     name: 'bl-browser',

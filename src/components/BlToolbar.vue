@@ -1,5 +1,5 @@
 <template>
-  <div class="bl-window-toolbar"
+  <div class="bl-toolbar"
     v-if="instance"
     :class="toolbarClass">
     <slot></slot>
@@ -12,7 +12,7 @@
   import Toolbar from '../classes/Toolbar'
 
   export default {
-    name: 'bl-window-toolbar',
+    name: 'bl-toolbar',
 
     mixins: [
       ViewMixin
@@ -41,7 +41,7 @@
 </script>
 
 <style>
-  .bl-window-toolbar {
+  .bl-toolbar {
     height: 40px;
     background-color: grey;
     display: flex;
@@ -49,15 +49,15 @@
     justify-content: space-around;
   }
 
-  .bl-window-toolbar.icon-and-label {
+  .bl-toolbar.icon-and-label {
     height: 54px;
   }
 
-  .bl-window-toolbar.icon-only {
+  .bl-toolbar.icon-only {
     height: 40px;
   }
 
-  .bl-window-toolbar.label-only {
+  .bl-toolbar.label-only {
     height: 30px;
   }
 </style>

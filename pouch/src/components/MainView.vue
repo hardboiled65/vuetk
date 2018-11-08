@@ -1,13 +1,12 @@
 <template lang="blui">
-  <bl-window ref="mainWindow">
+  <div ref="mainWindow">
     <!-- Window menu bar -->
-    <template slot="menuBar">
-      <bl-menu
-        :instance="mainMenu">
-      </bl-menu>
-    </template>
+    <bl-menu
+      :instance="mainMenu">
+    </bl-menu>
     <!-- Window toolbar -->
-    <template slot="toolbar">
+    <bl-toolbar
+      :instance="toolbar">
       <bl-toolbar-item label="Up">
         <bl-button
           :instance="upButton">
@@ -23,7 +22,7 @@
           :instance="moveSegments">
         </bl-segmented-control>
       </bl-toolbar-item>
-    </template>
+    </bl-toolbar>
     <!-- Window body -->
     <template slot="body">
       <bl-browser
@@ -64,7 +63,7 @@
         v-model="selectedFile.data">
       </textarea>
     </bl-window>
-  </bl-window>
+  </div>
 </template>
 
 <script>
@@ -77,10 +76,14 @@
     SegmentedControl,
     Icon,
     Browser,
+    Toolbar,
   } from '@hardboiled65/vuetk'
+
+  import BlWindow from '@hardboiled65/vuetk/src/components/BlWindow'
 
   export default {
     name: 'main-view',
+    extends: BlWindow,
 
     data: () => ({
       menus: [],
@@ -172,6 +175,9 @@
       this.menus[2].items[2].action = () => {
         this.showAbout = true;
       }
+
+      // Set toolbar
+      this.toolbar = new Toolbar();
 
       // Set segmented controls
       this.moveSegments = new SegmentedControl();

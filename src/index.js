@@ -7,7 +7,7 @@ import BlBrowser from './components/BlBrowser'
 import BlWindow from './components/BlWindow'
 import BlAlert from './components/BlAlert'
 import BlMenuBar from './components/BlMenuBar'
-import BlWindowToolbar from './components/BlWindowToolbar'
+import BlToolbar from './components/BlToolbar'
 import BlToolbarItem from './components/BlToolbarItem'
 
 import BlMenu from './components/BlMenu'
@@ -44,6 +44,7 @@ export default {
   install(Vue, options) {
     // Global state
     var state = {
+      app: null,
       menuOpened: false,
       modalOpened: false,
     };
@@ -53,7 +54,7 @@ export default {
     Vue.component(BlWindow.name, BlWindow);
     Vue.component(BlAlert.name, BlAlert);
     Vue.component(BlMenuBar.name, BlMenuBar);
-    Vue.component(BlWindowToolbar.name, BlWindowToolbar);
+    Vue.component(BlToolbar.name, BlToolbar);
     Vue.component(BlMenu.name, BlMenu);
     Vue.component(BlMenuItem.name, BlMenuItem);
     Vue.component(BlButton.name, BlButton);
@@ -61,11 +62,13 @@ export default {
     Vue.component(BlToolbarItem.name, BlToolbarItem);
 
     Vue.prototype.$bl = {
-      state: state,
-
       Button: Button,
       Menu: Menu,
       MenuItem: MenuItem,
+    };
+
+    Vue.prototype.$vuetk = {
+      state: state,
     };
   },
 }

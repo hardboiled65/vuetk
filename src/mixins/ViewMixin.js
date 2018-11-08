@@ -3,7 +3,7 @@ export default {
 
   data() {
     return {
-      sharedState: this.$bl.state,
+      sharedState: this.$vuetk.state,
     };
   },
 
