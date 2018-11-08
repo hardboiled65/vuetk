@@ -6,7 +6,7 @@
     }"
     :style="windowStyle"
     @click.capture="captureAll($event)"
-    @keypress.down="onKeypressDown">
+    @keydown="onKeydown">
     <div class="title-bar" ref="titleBar"
       v-if="!mainWindow"
       draggable="true"
@@ -60,6 +60,8 @@
   import BlMenuBar from './BlMenuBar'
   import BlWindowToolbar from './BlWindowToolbar'
 
+  import ViewMixin from '../mixins/ViewMixin'
+
   import { ApplicationWindow } from '../classes/Window'
   import Menu from '../classes/Menu'
   import Toolbar from '../classes/Toolbar'
@@ -71,6 +73,10 @@
       BlMenuBar,
       BlWindowToolbar,
     },
+
+    mixins: [
+      ViewMixin,
+    ],
 
     props: {
       instance: {
@@ -160,7 +166,7 @@
     methods: {
       captureAll(evt) {
         // Capture when menu opened.
-        if (this.$bl.state.menuOpened) {
+        if (this.sharedState.menuOpened) {
           if (evt.target.className === 'bl-menu-item-node') {
             if (!evt.target.parentNode.className.includes('enabled')) {
               evt.stopPropagation();
@@ -171,11 +177,11 @@
             return;
           }
           // this.$bl.app.menu = null;
-          this.$bl.state.menuOpened = false;
+          this.sharedState.menuOpened = false;
           // evt.stopPropagation();
         }
         // Capture when modal opened.
-        if (this.$bl.state.modalOpened) {
+        if (this.sharedState.modalOpened) {
           const path = evt.composedPath
             ? evt.composedPath()
             : this.$_composedPath(evt);
@@ -338,9 +344,9 @@
       //=======================
       // Keyboard events
       //=======================
-      onKeypressDown() {
-        if (this.$bl.state.menuOpened) {
-          console.log('menu down');
+      onKeydown() {
+        if (this.sharedState.menuOpened) {
+          // console.log('menu down');
         }
       },
     }

@@ -1,20 +1,9 @@
 <template>
-  <div class="bl-menu"
-    :class="{
-      'menu-bar-menu': type === $bl.Menu.MenuType.MenuBarMenu,
-      'context-menu': type === $bl.Menu.MenuType.ContextMenu,
-      'opened': false,
-      'submenu': type === $bl.Menu.MenuType.Submenu,
-    }"
+  <div class="bl-menu" tabindex="-1" ref="menu"
+    :class="menuClass"
     @click="$emit('click')"
-    @mouseenter="$emit('mouseenter')">
-    <!-- <div class="menu-item-container"
-      v-if="opened">
-      <bl-menu-item
-        v-for="item in instance.items" :key="item.title"
-        :instance="item">
-      </bl-menu-item>
-    </div> -->
+    @mouseenter="$emit('mouseenter')"
+    @keydown="onKeydown($event)">
     <bl-menu-item
       v-for="(item, idx) in instance.items" :key="idx"
       :instance="item"
@@ -28,6 +17,8 @@
 <script>
   import BlMenuItem from './BlMenuItem'
 
+  import ViewMixin from '../mixins/ViewMixin'
+
   import Menu from '../classes/Menu'
 
   export default {
@@ -36,6 +27,10 @@
     components: {
       BlMenuItem,
     },
+
+    mixins: [
+      ViewMixin,
+    ],
 
     props: {
       instance: {
@@ -52,6 +47,32 @@
       type() {
         return this.instance.type;
       },
+
+      menuBarMenu() {
+        return this.instance.type === Menu.MenuType.MenuBarMenu;
+      },
+
+      contextualMenu() {
+        return this.instance.type === Menu.MenuType.ContextMenu;
+      },
+
+      submenu() {
+        return this.instance.type === Menu.MenuType.Submenu;
+      },
+
+      menuClass() {
+        return {
+          'menu-bar-menu': this.menuBarMenu,
+          'context-menu': this.contextualMenu,
+          'submenu': this.submenu,
+        };
+      },
+    },
+
+    mounted() {
+      if (this.submenu) {
+        this.$refs.menu.focus();
+      }
     },
 
     methods: {
@@ -66,6 +87,38 @@
 
       onFocusoutItem(idx) {
         this.focusedItemIndex = null;
+      },
+
+      onKeydown(evt) {
+        const itemsLength = this.instance.items.length;
+        const itemIndex = this.focusedItemIndex;
+        if (this.menuBarMenu && this.focusedItemIndex !== null) {
+          // For menu bar menu.
+          if (evt.key === 'ArrowRight') {
+            this.focusedItemIndex = (this.focusedItemIndex + 1) % itemsLength
+          } else if (evt.key === 'ArrowLeft') {
+            this.focusedItemIndex = (this.focusedItemIndex <= 0)
+              ? itemsLength - 1
+              : this.focusedItemIndex - 1;
+          } else if (evt.key === 'Escape') {
+            this.sharedState.menuOpened = false;
+          }
+        } else if (this.submenu) {
+          // For submenu.
+          if (evt.key === 'ArrowDown') {
+            if (this.focusedItemIndex === null) {
+              this.focusedItemIndex = 0;
+            } else {
+              (itemIndex === itemsLength - 1) ? null : ++this.focusedItemIndex;
+            }
+          } else if (evt.key === 'ArrowUp') {
+            if (this.focusedItemIndex === null) {
+              this.focusedItemIndex = itemsLength - 1;
+            } else {
+              (itemIndex === 0) ? null : --this.focusedItemIndex;
+            }
+          }
+        }
       },
     }
   }
@@ -82,10 +135,6 @@
     height: 100%;
     display: flex;
     align-items: center;
-  }
-
-  .bl-menu.menu-bar-menu.opened {
-    background-color: green;
   }
 
   .bl-menu.submenu {

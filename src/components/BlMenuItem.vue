@@ -1,5 +1,5 @@
 <template>
-  <div class="bl-menu-item"
+  <div class="bl-menu-item" tabindex="-1"
     :class="menuItemClass"
     @mouseenter="onMouseenter"
     @mouseleave="onMouseleave"
@@ -9,7 +9,7 @@
       style="height: 26px;">{{ instance.title }}</span>
     <div class="bl-menu-item-node"
       v-else>-----</div>
-    <bl-menu
+    <bl-menu ref="submenu"
       v-if="instance.hasSubmenu() && submenuOpened"
       :instance="instance.submenu">
     </bl-menu>
@@ -118,7 +118,7 @@
       },
 
       onMouseenter() {
-        if (this.menuBarMenuItem && this.$bl.state.menuOpened) {
+        if (this.menuBarMenuItem && this.sharedState.menuOpened) {
           this.$emit('focusin');
         } else if (this.$bl.state.menuOpened) {
           this.$emit('focusin');
