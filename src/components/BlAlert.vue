@@ -34,14 +34,6 @@
     },
 
     props: {
-      value: {
-        // type: Alert,
-        required: true,
-        validator(value) {
-          return (value === null) || (value instanceof Alert);
-        }
-      },
-
       instance: {
         type: Alert,
         required: true
@@ -54,8 +46,13 @@
     }),
 
     created() {
+      this.instance.buttons[0].action = () => {
+        // True
+        this.instance._callback(true);
+      }
       this.instance.buttons[1].action = () => {
-        this.$emit('input', null);
+        // False
+        this.instance._callback(false);
       }
     },
 

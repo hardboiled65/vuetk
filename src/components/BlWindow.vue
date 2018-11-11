@@ -141,7 +141,11 @@
         }
 
         return style;
-      }
+      },
+
+      modal() {
+        return this.sharedState.modal;
+      },
     },
 
     watch: {

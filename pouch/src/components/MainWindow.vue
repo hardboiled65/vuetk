@@ -1,4 +1,4 @@
-<template lang="blui">
+<template>
   <div ref="mainWindow">
     <!-- Window menu bar -->
     <bl-menu
@@ -82,7 +82,7 @@
   import BlWindow from '@hardboiled65/vuetk/src/components/BlWindow'
 
   export default {
-    name: 'main-view',
+    name: 'main-window',
     extends: BlWindow,
 
     data: () => ({
@@ -91,7 +91,6 @@
       // Unique references
       //===================
       menu: null,
-      modal: null,
       //===============
       // Views
       //===============
@@ -419,7 +418,7 @@
       },
 
       deleteFileAction() {
-        this.modal = this.alert;
+        this.alert.runModal();
       },
     }
   }

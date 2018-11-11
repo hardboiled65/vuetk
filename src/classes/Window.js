@@ -71,6 +71,8 @@ class Alert extends ApplicationWindow {
     this._buttons.push(new Button());
     this._buttons[0].title = 'Ok';
     this._buttons[1].title = 'Cancel';
+
+    this._callback = null;
   }
 
   //==================
@@ -96,7 +98,14 @@ class Alert extends ApplicationWindow {
     return this._buttons;
   }
 
-  runModal() {}
+  runModal(vm, callback) {
+    vm.$vuetk.state.modal = this;
+    if (callback) {
+      this._callback = callback();
+    } else {
+      this._callback = (bool) => {};
+    }
+  }
 }
 
 export {

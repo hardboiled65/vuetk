@@ -45,6 +45,7 @@ export default {
     // Global state
     var state = {
       app: null,
+      modal: null,
       menuOpened: false,
       modalOpened: false,
     };

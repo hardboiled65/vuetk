@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <main-view>
-    </main-view>
+    <main-window>
+    </main-window>
   </div>
 </template>
 
 <script>
-import MainView from './components/MainView.vue'
+import MainWindow from './components/MainWindow.vue'
 
 export default {
   name: 'app',
   components: {
-    MainView,
+    MainWindow,
   }
 }
 </script>

@@ -16,7 +16,7 @@
     "@vue/cli-plugin-eslint": "^3.0.5",
     "@vue/cli-service": "^3.0.5",
     "vue-template-compiler": "^2.5.17",
-    "hello-loader": "file:../../hello-loader"
+    "vue-cli-plugin-blui": "^0.0.2"
   },
   "eslintConfig": {
     "root": true,
