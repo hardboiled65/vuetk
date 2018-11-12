@@ -1,9 +1,10 @@
 <template>
   <div class="bl-menu-item" tabindex="-1"
+    v-if="(menuBarMenuItem) || (submenuItem && sharedState.menuOpened)"
     :class="menuItemClass"
     @mouseenter="onMouseenter"
     @mouseleave="onMouseleave"
-    @click.stop="onClick($event)">
+    @click.stop.prevent="onClick($event)">
     <span class="bl-menu-item-node"
       v-if="!instance.isSeparator()"
       style="height: 26px;">{{ instance.title }}</span>
@@ -72,16 +73,13 @@
       menuBarMenuItem() {
         return (this.$parent.instance.type === Menu.MenuType.MenuBarMenu);
       },
+
+      submenuItem() {
+        return (this.$parent.instance.type === Menu.MenuType.Submenu);
+      },
     },
 
     watch: {
-      'sharedState.menuOpened'(newVal) {
-        if (!newVal) {
-          this.submenuOpened = false;
-          this.$emit('focusout');
-        }
-      },
-
       focused(newVal) {
         if (!newVal) {
           this.submenuOpened = false;
@@ -107,12 +105,15 @@
             this.$emit('focusin');
             this.sharedState.menuOpened = true;
           } else {
-            this.$emit('focusout');
             this.sharedState.menuOpened = false;
           }
         }
         if (this.instance.action) {
           this.instance.action();
+        }
+        if (this.submenuItem) {
+          this.$emit('focusout');
+          this.sharedState.menuOpened = false;
         }
         console.log('menu item clicked');
       },

@@ -19,6 +19,7 @@ import Button from './Button'
 class ApplicationWindow {
   constructor(type) {
     this._type = type;
+    this._title = '';
     this._x = 0;
     this._y = 0;
   }
@@ -43,7 +44,15 @@ class ApplicationWindow {
   }
 
   set y(posY) {
-    this._y = posY;
+    this._y = (posY >= 0) ? posY : 0;
+  }
+
+  get title() {
+    return this._title;
+  }
+
+  set title(title) {
+    this._title = title;
   }
 
   //=================
@@ -60,7 +69,7 @@ class ApplicationWindow {
 
 class Alert extends ApplicationWindow {
   constructor(message=null, informativeText='This is an alert.') {
-    super(WindowType.AlertWindow);
+    super(WindowType.Alert);
     // this._type = WindowType.AlertWindow;
     this._message = message;
     this._informativeText = informativeText;
@@ -73,6 +82,8 @@ class Alert extends ApplicationWindow {
     this._buttons[1].title = 'Cancel';
 
     this._callback = null;
+
+    this._vm = null;
   }
 
   //==================
@@ -100,10 +111,11 @@ class Alert extends ApplicationWindow {
 
   runModal(vm, callback) {
     vm.$vuetk.state.modal = this;
+    vm.$vuetk.state.modalOpened = true;
     if (callback) {
       this._callback = callback();
     } else {
-      this._callback = (bool) => {};
+      this._callback = () => {};
     }
   }
 }

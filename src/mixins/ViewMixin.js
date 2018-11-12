@@ -13,7 +13,7 @@ export default {
         'bl-view': true
       };
 
-      if (this.sharedState.menuOpened || this.sharedState.modalOpened) {
+      if (this.sharedState.menuOpened || this.sharedState.modal !== null) {
         cls['pointer-events-none'] = true;
       }
       return cls;

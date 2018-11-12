@@ -1,8 +1,7 @@
 <template>
   <div class="bl-window" tabindex="0"
     :class="windowClass"
-    :style="windowStyle"
-    @click.capture="captureAll($event)">
+    :style="windowStyle">
     <div class="title-bar" ref="titleBar"
       v-if="!mainWindow"
       draggable="true"
@@ -11,8 +10,7 @@
       @mouseup.stop="onMouseup($event)"
       @dragstart="onDragstart($event)"
       @drag="onDrag($event)"
-      @dragend.prevent="onDragend($event)"
-      @click="captureAll($event)"> <!-- ??? -->
+      @dragend.prevent="onDragend($event)">
       <div class="buttons">
         <button class="button-window-close"
           v-if="setButtonWindowClose"
@@ -23,14 +21,14 @@
           @click="$emit('windowMinimize')"
           @mousedown.stop>-</button>
       </div>
-      <span class="title">{{ title }}</span>
+      <span class="title">{{ instance.title }}</span>
       <div class="right-space">
       </div>
     </div>
-    <bl-menu-bar
+    <div
       v-if="hasMenuBar">
       <slot name="menuBar"></slot>
-    </bl-menu-bar>
+    </div>
     <bl-toolbar
       v-if="hasToolbar"
       :instance="toolbar">
@@ -53,7 +51,6 @@
 </template>
 
 <script>
-  import BlMenuBar from './BlMenuBar'
   import BlToolbar from './BlToolbar'
 
   import ViewMixin from '../mixins/ViewMixin'
@@ -67,7 +64,6 @@
     name: 'bl-window',
 
     components: {
-      BlMenuBar,
       BlToolbar,
     },
 
@@ -100,6 +96,7 @@
       toolbar: null,
 
       documentDragoverHandler: null,
+      documentMousemoveHandler: null,
       cursorRect: {
         x: null,
         y: null
@@ -108,13 +105,13 @@
         x: null,
         y: null
       },
-      movingImpl: 1, // 0: mousedown, 1: dragstart
+      movingImpl: 0, // 0: mousedown, 1: dragstart
     }),
 
     computed: {
       mainWindow() {
-        return (this.$parent.$parent === this.$root) ||
-          (this.$parent.mainView === true);
+        return this.instance.type === ApplicationWindow.WindowType.MainWindow ||
+          this.instance.type === ApplicationWindow.WindowType.AppWindow;
       },
 
       hasMenuBar() {
@@ -129,6 +126,7 @@
          return {
           'main-window': this.mainWindow,
           'sub-window': !this.mainWindow,
+          'alert': this.instance.type === ApplicationWindow.WindowType.Alert,
         };
       },
 
@@ -157,7 +155,6 @@
     },
 
     created() {
-      this.$emit('_load');
       if (this.mainWindow) {
         document.title = this.title;
         let favicon = document.createElement('link');
@@ -175,6 +172,7 @@
       if (!this.$el.classList.contains('bl-window')) {
         this.$el.classList.add('bl-window');
       }
+      this.$el.addEventListener('click', this.captureAll, true);
       this.$el.addEventListener('contextmenu', e => {
         e.preventDefault();
       });
@@ -182,32 +180,27 @@
 
     methods: {
       captureAll(evt) {
+        const path = evt.composedPath
+          ? evt.composedPath()
+          : this.$_composedPath(evt);
         // Capture when menu opened.
         if (this.sharedState.menuOpened) {
-          if (evt.target.className === 'bl-menu-item-node') {
-            if (!evt.target.parentNode.className.includes('enabled')) {
-              evt.stopPropagation();
+          for (let i = 0; i < path.length; ++i) {
+            if (path[i].className && path[i].className.includes('bl-menu')) {
               return;
             }
           }
-          if (evt.target.className.split(' ').includes('bl-menu')) {
-            return;
-          }
-          // this.$bl.app.menu = null;
           this.sharedState.menuOpened = false;
           // evt.stopPropagation();
         }
         // Capture when modal opened.
         if (this.sharedState.modalOpened) {
-          const path = evt.composedPath
-            ? evt.composedPath()
-            : this.$_composedPath(evt);
           for (let i = 0; i < path.length; ++i) {
             if (path[i].className && path[i].className.includes('bl-alert')) {
               return;
             }
           }
-          this.$bl.app.$refs.alert.$refs.window.$emit('windowBlink');
+          this.$vuetk.state.modal._vm.$refs.window.$emit('windowBlink');
           evt.stopPropagation();
         }
       },
@@ -252,17 +245,28 @@
       },
 
       onMousedown(evt) {
+        if (this.movingImpl !== 0) {
+          return;
+        }
+
         this.moving = true;
 
         this.cursorRect.x = evt.clientX;
         this.cursorRect.y = evt.clientY;
 
-        if (this.movingImpl !== 0) {
-          return;
-        }
         const rect = this.$refs.titleBar.getBoundingClientRect();
         this.offsetRect.x = this.cursorRect.x - rect.x;
         this.offsetRect.y = this.cursorRect.y - rect.y;
+
+        if (!this.documentMousemoveHandler) {
+          this.documentMousemoveHandler = (evt) => {
+            this.cursorRect.x = evt.clientX;
+            this.cursorRect.y = evt.clientY;
+            this.instance.x = this.cursorRect.x - this.offsetRect.x;
+            this.instance.y = this.cursorRect.y - this.offsetRect.y;
+          };
+          document.addEventListener('mousemove', this.documentMousemoveHandler);
+        }
       },
 
       onMousemove(evt) {
@@ -272,13 +276,11 @@
         if (!this.moving) {
           return;
         }
-
-        this.cursorRect.x = evt.clientX;
-        this.cursorRect.y = evt.clientY;
+        return;
 
         // const rect = this.$refs.titleBar.getBoundingClientRect();
-        this.instance.x = this.cursorRect.x - this.offsetRect.x;
-        this.instance.y = this.cursorRect.y - this.offsetRect.y;
+        // this.instance.x = this.cursorRect.x - this.offsetRect.x;
+        // this.instance.y = this.cursorRect.y - this.offsetRect.y;
       },
 
       onMouseup(evt) {
@@ -286,6 +288,8 @@
           return;
         }
         this.moving = false;
+        document.removeEventListener('mousemove', this.documentMousemoveHandler);
+        this.documentMousemoveHandler = null;
       },
 
       onDragstart(evt) {
@@ -387,6 +391,15 @@
     overflow: hidden;
     background-color: #e2dfde;
   }
+
+  .bl-window.main-window {
+    width: 100%;
+    height: 100%;
+  }
+
+  .bl-window.alert {
+    background-color: lightgrey;
+  }
 </style>
 
 <style scoped>
@@ -419,11 +432,6 @@
 
   .bl-window .title-bar .title {
     text-shadow: 0 0 10px #ffffff;
-  }
-
-  .main-window {
-    width: 100%;
-    height: 100%;
   }
 
   .sub-window {

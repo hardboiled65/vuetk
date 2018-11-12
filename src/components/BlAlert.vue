@@ -53,11 +53,14 @@
       this.instance.buttons[1].action = () => {
         // False
         this.instance._callback(false);
+        this.$vuetk.state.modal = null;
+        this.$vuetk.state.modalOpened = false;
       }
+
+      this.instance._vm = this;
     },
 
     mounted() {
-      this.$refs.window.title = '';
     },
 
     methods: {

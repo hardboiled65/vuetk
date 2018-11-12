@@ -1,8 +1,8 @@
 <template>
   <div class="bl-menu" tabindex="-1" ref="menu"
     :class="menuClass"
-    @click="$emit('click')"
     @mouseenter="$emit('mouseenter')"
+    @click.stop="onClick"
     @keydown="onKeydown($event)">
     <bl-menu-item
       v-for="(item, idx) in instance.items" :key="idx"
@@ -69,6 +69,14 @@
       },
     },
 
+    watch: {
+      'sharedState.menuOpened'(newVal) {
+        if (!newVal) {
+          this.focusedItemIndex = null;
+        }
+      },
+    },
+
     mounted() {
       if (this.submenu) {
         this.$refs.menu.focus();
@@ -89,6 +97,12 @@
         this.focusedItemIndex = null;
       },
 
+      onClick() {
+        if (this.menuBarMenu && this.focusedItemIndex !== null) {
+          this.sharedState.menuOpened = false;
+        }
+      },
+
       onKeydown(evt) {
         const itemsLength = this.instance.items.length;
         const itemIndex = this.focusedItemIndex;
@@ -101,6 +115,7 @@
               ? itemsLength - 1
               : this.focusedItemIndex - 1;
           } else if (evt.key === 'Escape') {
+            this.focusedItemIndex = null;
             this.sharedState.menuOpened = false;
           }
         } else if (this.submenu) {
@@ -132,7 +147,8 @@
 
   .bl-menu.menu-bar-menu {
     padding: 0 10px;
-    height: 100%;
+    height: 30px;
+    background-color: #eeedeb;
     display: flex;
     align-items: center;
   }

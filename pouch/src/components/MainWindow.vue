@@ -1,5 +1,6 @@
 <template>
-  <div ref="mainWindow">
+  <div class="bl-window main-window"
+    :class="windowClass">
     <!-- Window menu bar -->
     <bl-menu
       :instance="mainMenu">
@@ -24,29 +25,26 @@
       </bl-toolbar-item>
     </bl-toolbar>
     <!-- Window body -->
-    <template slot="body">
-      <bl-browser
-        :instance="browser"
-        @selectColumn="onSelectColumn"
-        @selectRow="onSelectRow">
-        <div class="preview"
-          style="width: auto;">
-          <div class="preview-content"
-            v-if="selectedFile !== null && selectedFile.type === 'text'">
-            <bl-button
-              :instance="editButton">
-            </bl-button>
-            <h3>{{ selectedFile.name }}</h3>
-            <p>{{ selectedFile.data }}</p>
-          </div>
+    <bl-browser
+      :instance="browser"
+      @selectColumn="onSelectColumn"
+      @selectRow="onSelectRow">
+      <div class="preview"
+        style="width: auto;">
+        <div class="preview-content"
+          v-if="selectedFile !== null && selectedFile.type === 'text'">
+          <bl-button
+            :instance="editButton">
+          </bl-button>
+          <h3>{{ selectedFile.name }}</h3>
+          <p>{{ selectedFile.data }}</p>
         </div>
-      </bl-browser>
-    </template>
+      </div>
+    </bl-browser>
     <!-- Confirm delete -->
-    <bl-alert ref="alert"
+    <bl-alert
       v-if="modal"
-      v-model="modal"
-      :instance="alert">
+      :instance="modal">
     </bl-alert>
     <!-- About panel -->
     <bl-window
@@ -99,7 +97,6 @@
       upButton: null,
       newFolderButton: null,
       editButton: null,
-      alert: null,
       editor: null,
       moveSegments: null,
       //===============
@@ -156,25 +153,6 @@
         this.showAbout = true;
       }
 
-      // Old
-      this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'File'));
-      this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'Edit'));
-      this.menus.push(new Menu(Menu.MenuType.MenuBarMenu, 'Help'));
-
-      this.menus[0].items.push(new MenuItem('New Text File'));
-      this.menus[0].items[0].action = this.newTextFileAction;
-
-      this.menus[1].items.push(new MenuItem('Delete'));
-      this.menus[1].items[0].action = this.deleteFileAction;
-
-      this.menus[2].items.push(new MenuItem('Handbook'));
-      this.menus[2].items.push(MenuItem.separator());
-      this.menus[2].items.push(new MenuItem('About'));
-
-      this.menus[2].items[2].action = () => {
-        this.showAbout = true;
-      }
-
       // Set toolbar
       this.toolbar = new Toolbar();
 
@@ -182,12 +160,6 @@
       this.moveSegments = new SegmentedControl();
       this.moveSegments.addSegment().label = 'Back';
       this.moveSegments.addSegment().label = 'Forward';
-
-      // Set alert
-      this.alert = new Alert();
-      this.alert.message = 'Delete';
-      this.alert.informativeText = 'Are you sure to delete file?';
-      this.alert.icon = new Icon('Control.Action');
 
       // Set browser
       this.browser = new Browser();
@@ -231,8 +203,6 @@
     },
 
     mounted() {
-      this.$refs.mainWindow.title = 'Pouch'
-
       window.location.replace(window.location.origin + '#/');
     },
 
@@ -241,7 +211,7 @@
       // Initialize views
       //===================
       createEditor() {
-        this.editor = new ApplicationWindow(1);
+        this.editor = new ApplicationWindow(ApplicationWindow.WindowType.Panel);
       },
 
       // File handling
@@ -418,7 +388,10 @@
       },
 
       deleteFileAction() {
-        this.alert.runModal();
+        let alert = new Alert('Delete');
+        alert.informativeText = 'Are you sure to delete file?';
+        alert.icon = new Icon('Control.Action');
+        alert.runModal(this);
       },
     }
   }

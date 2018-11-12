@@ -6,7 +6,6 @@ import BlBrowser from './components/BlBrowser'
 
 import BlWindow from './components/BlWindow'
 import BlAlert from './components/BlAlert'
-import BlMenuBar from './components/BlMenuBar'
 import BlToolbar from './components/BlToolbar'
 import BlToolbarItem from './components/BlToolbarItem'
 
@@ -54,7 +53,6 @@ export default {
     Vue.component(BlBrowser.name, BlBrowser);
     Vue.component(BlWindow.name, BlWindow);
     Vue.component(BlAlert.name, BlAlert);
-    Vue.component(BlMenuBar.name, BlMenuBar);
     Vue.component(BlToolbar.name, BlToolbar);
     Vue.component(BlMenu.name, BlMenu);
     Vue.component(BlMenuItem.name, BlMenuItem);
