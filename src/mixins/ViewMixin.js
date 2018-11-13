@@ -8,6 +8,9 @@ export default {
   },
 
   computed: {
+    //================
+    // Vue class
+    //================
     viewClass() {
       let cls = {
         'bl-view': true
@@ -17,6 +20,30 @@ export default {
         cls['pointer-events-none'] = true;
       }
       return cls;
+    },
+
+    //=================
+    // Vue style
+    //=================
+    viewStyle() {
+      let style = {
+        flexGrow: this.$_ViewMixin_flexGrow,
+      };
+      if (this.$_ViewMixin_flexGrow === '1') {
+        style.height = '100%';
+      }
+
+      return style;
+    },
+
+    $_ViewMixin_flexGrow() {
+      if (this.instance._anchor.top !== null &&
+          this.instance._anchor.right !== null &&
+          this.instance._anchor.bottom !== null &&
+          this.instance._anchor.left !== null) {
+        return '1';
+      }
+      return false;
     },
   },
 

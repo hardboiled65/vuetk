@@ -1,4 +1,6 @@
-class Browser {
+import Control from './Control'
+
+class Browser extends Control {
   static Column() {
     this.rows = [];
     this.width = 100;
@@ -6,6 +8,7 @@ class Browser {
   }
 
   constructor() {
+    super();
     this._columns = [];
   }
 

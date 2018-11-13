@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  import ViewMixin from '../mixins/ViewMixin'
+  import ControlMixin from '../mixins/ControlMixin'
 
   import Button from '../classes/Button'
 
@@ -28,7 +28,7 @@
     },
 
     mixins: [
-      ViewMixin
+      ControlMixin
     ],
 
     computed: {
@@ -37,7 +37,7 @@
       },
 
       buttonClass() {
-        let cls = Object.assign({}, this.viewClass);
+        let cls = Object.assign({}, this.controlClass);
 
         cls['push-button'] = this.type === Button.ButtonType.PushButton;
 

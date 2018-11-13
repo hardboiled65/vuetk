@@ -25,22 +25,25 @@
       </bl-toolbar-item>
     </bl-toolbar>
     <!-- Window body -->
-    <bl-browser
-      :instance="browser"
-      @selectColumn="onSelectColumn"
-      @selectRow="onSelectRow">
-      <div class="preview"
-        style="width: auto;">
-        <div class="preview-content"
-          v-if="selectedFile !== null && selectedFile.type === 'text'">
-          <bl-button
-            :instance="editButton">
-          </bl-button>
-          <h3>{{ selectedFile.name }}</h3>
-          <p>{{ selectedFile.data }}</p>
+    <bl-view
+      :instance="bodyView">
+      <bl-browser
+        :instance="browser"
+        @selectColumn="onSelectColumn"
+        @selectRow="onSelectRow">
+        <div class="preview"
+          style="width: auto;">
+          <div class="preview-content"
+            v-if="selectedFile !== null && selectedFile.type === 'text'">
+            <bl-button
+              :instance="editButton">
+            </bl-button>
+            <h3>{{ selectedFile.name }}</h3>
+            <p>{{ selectedFile.data }}</p>
+          </div>
         </div>
-      </div>
-    </bl-browser>
+      </bl-browser>
+    </bl-view>
     <!-- Confirm delete -->
     <bl-alert
       v-if="modal"
@@ -163,6 +166,10 @@
 
       // Set browser
       this.browser = new Browser();
+      this.browser.anchorTop = 0;
+      this.browser.anchorRight = 0;
+      this.browser.anchorBottom = 0;
+      this.browser.anchorLeft = 0;
       this.browser.addColumn();
       this.browser.addColumn();
 

@@ -51,13 +51,16 @@
 
   .bl-toolbar.icon-and-label {
     height: 54px;
+    min-height: 54px;
   }
 
   .bl-toolbar.icon-only {
     height: 40px;
+    min-height: 40px;
   }
 
   .bl-toolbar.label-only {
     height: 30px;
+    min-height: 30px;
   }
 </style>

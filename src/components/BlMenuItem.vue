@@ -58,6 +58,7 @@
           'enabled': true,
           'focused': this.focused,
         }, this.viewClass);
+        cls['bl-view'] = false;
         cls['pointer-events-none'] = false;
 
         if (this.instance.isSeparator()) {

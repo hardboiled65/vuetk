@@ -58,6 +58,7 @@
   import { ApplicationWindow } from '../classes/Window'
   import Menu from '../classes/Menu'
   import Toolbar from '../classes/Toolbar'
+  import View from '../classes/View'
   import Image from '../classes/Image'
 
   export default {
@@ -94,6 +95,7 @@
       title: 'App',
       moving: false,
       toolbar: null,
+      bodyView: null,
 
       documentDragoverHandler: null,
       documentMousemoveHandler: null,
@@ -109,6 +111,9 @@
     }),
 
     computed: {
+      //==================
+      // Instance type
+      //==================
       mainWindow() {
         return this.instance.type === ApplicationWindow.WindowType.MainWindow ||
           this.instance.type === ApplicationWindow.WindowType.AppWindow;
@@ -122,6 +127,9 @@
         return (Boolean(this.$slots.toolbar) || this.toolbar);
       },
 
+      //=================
+      // Vue class
+      //=================
       windowClass() {
          return {
           'main-window': this.mainWindow,
@@ -130,6 +138,9 @@
         };
       },
 
+      //================
+      // Vue style
+      //================
       windowStyle() {
         let style = {};
 
@@ -155,6 +166,13 @@
     },
 
     created() {
+      // Create body area view instance.
+      this.bodyView = new View();
+      this.bodyView._anchor.top = 0;
+      this.bodyView._anchor.right = 0;
+      this.bodyView._anchor.bottom = 0;
+      this.bodyView._anchor.left = 0;
+
       if (this.mainWindow) {
         document.title = this.title;
         let favicon = document.createElement('link');
@@ -390,6 +408,8 @@
     user-select: none;
     overflow: hidden;
     background-color: #e2dfde;
+    display: flex;
+    flex-direction: column;
   }
 
   .bl-window.main-window {

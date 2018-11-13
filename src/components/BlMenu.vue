@@ -148,6 +148,7 @@
   .bl-menu.menu-bar-menu {
     padding: 0 10px;
     height: 30px;
+    min-height: 30px;
     background-color: #eeedeb;
     display: flex;
     align-items: center;
@@ -158,6 +159,7 @@
     flex-direction: column;
     position: absolute;
     top: 30px;
+    z-index: 1;
     background-color: lightgrey;
   }
 
