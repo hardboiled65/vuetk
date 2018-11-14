@@ -48,4 +48,13 @@ class View {
   }
 }
 
+View.WindowBody = (() => {
+  let view = new View();
+  view.anchorTop = 0;
+  view.anchorLeft = 0;
+  view.anchorRight = 0;
+  view.anchorBottom = 0;
+  return view;
+})();
+
 export { View as default }

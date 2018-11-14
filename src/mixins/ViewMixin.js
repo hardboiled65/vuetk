@@ -1,5 +1,32 @@
+const Stick = {
+  Top: 0b0001,
+  Right: 0b0010,
+  Bottom: 0b0100,
+  Left: 0b1000
+};
+
 export default {
-  props: {},
+  props: {
+    anchorTop: {
+      type: Number,
+      default: null
+    },
+
+    anchorRight: {
+      type: Number,
+      default: null
+    },
+
+    anchorBottom: {
+      type: Number,
+      default: null
+    },
+
+    anchorLeft: {
+      type: Number,
+      default: null
+    },
+  },
 
   data() {
     return {
@@ -8,6 +35,22 @@ export default {
   },
 
   computed: {
+    _anchorTop() {
+      return this.anchorTop;
+    },
+
+    _anchorRight() {
+      return this.anchorRight;
+    },
+
+    _anchorBottom() {
+      return this.anchorBottom;
+    },
+
+    _anchorLeft() {
+      return this.anchorLeft;
+    },
+
     //================
     // Vue class
     //================
@@ -37,13 +80,22 @@ export default {
     },
 
     $_ViewMixin_flexGrow() {
-      if (this.instance._anchor.top !== null &&
-          this.instance._anchor.right !== null &&
-          this.instance._anchor.bottom !== null &&
-          this.instance._anchor.left !== null) {
+      if (this._anchorTop !== null &&
+          this._anchorRight !== null &&
+          this._anchorBottom !== null &&
+          this._anchorLeft !== null) {
         return '1';
       }
       return false;
+    },
+
+    $_ViewMixin_stick() {
+      let stick = 0;
+      stick |= (this._anchorTop !== null) ? Stick.Top : 0;
+      stick |= (this._anchorRight !== null) ? Stick.Right : 0;
+      stick |= (this._anchorBottom !== null) ? Stick.Bottom : 0;
+      stick |= (this._anchorLeft !== null) ? Stick.Left : 0;
+      return stick;
     },
   },
 

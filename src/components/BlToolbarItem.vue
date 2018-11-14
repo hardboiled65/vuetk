@@ -1,6 +1,10 @@
 <template>
   <div class="bl-toolbar-item">
-    <slot></slot>
+    <slot
+      :anchorTop="null"
+      :anchorRight="null"
+      :anchorBottom="null"
+      :anchorLeft="null"></slot>
     <div class="label"
       v-if="showLabel">{{ label }}</div>
   </div>

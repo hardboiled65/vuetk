@@ -95,7 +95,6 @@
       title: 'App',
       moving: false,
       toolbar: null,
-      bodyView: null,
 
       documentDragoverHandler: null,
       documentMousemoveHandler: null,
@@ -166,13 +165,6 @@
     },
 
     created() {
-      // Create body area view instance.
-      this.bodyView = new View();
-      this.bodyView._anchor.top = 0;
-      this.bodyView._anchor.right = 0;
-      this.bodyView._anchor.bottom = 0;
-      this.bodyView._anchor.left = 0;
-
       if (this.mainWindow) {
         document.title = this.title;
         let favicon = document.createElement('link');

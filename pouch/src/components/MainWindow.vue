@@ -9,8 +9,12 @@
     <bl-toolbar
       :instance="toolbar">
       <bl-toolbar-item label="Up">
-        <bl-button
-          :instance="upButton">
+        <bl-button slot-scope="slotProps"
+          :instance="upButton"
+          :anchorTop="slotProps.anchorTop"
+          :anchorRight="slotProps.anchorRight"
+          :anchorBottom="slotProps.anchorBottom"
+          :anchorLeft="slotProps.anchorLeft">
         </bl-button>
       </bl-toolbar-item>
       <bl-toolbar-item label="New Folder">
@@ -26,9 +30,16 @@
     </bl-toolbar>
     <!-- Window body -->
     <bl-view
-      :instance="bodyView">
+      constant="WindowBody">
+      <bl-button
+        :instance="newFolderButton"
+        :anchorTop="10"
+        :anchorRight="10">
+      </bl-button>
       <bl-browser
         :instance="browser"
+        :anchorTop="0"
+        :anchorLeft="0"
         @selectColumn="onSelectColumn"
         @selectRow="onSelectRow">
         <div class="preview"

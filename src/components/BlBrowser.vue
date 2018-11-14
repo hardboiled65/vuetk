@@ -1,18 +1,19 @@
 <template>
-  <div class="bl-browser">
-    <bl-view class="column"
+  <div class="bl-browser"
+    :style="controlStyle">
+    <section class="column"
       v-for="(column, columnIdx) in instance.columns" :key="columnIdx"
-      :class="Object.assign(viewClass, { [`column-${columnIdx}`]: true })"
-      @click.native="() => {
+      :class="{ [`column-${columnIdx}`]: true }"
+      @click="() => {
         $emit('selectColumn', columnIdx);
         $emit('selectRow', columnIdx, null);
       }">
-      <bl-view class="row"
+      <div class="row"
         v-for="(row, idx) in column.rows" :key="idx"
-        @click.native.stop="$emit('selectRow', columnIdx, idx)">
+        @click.stop="$emit('selectRow', columnIdx, idx)">
         <span>{{ row }}</span>
-      </bl-view>
-    </bl-view>
+      </div>
+    </section>
     <slot></slot>
   </div>
 </template>

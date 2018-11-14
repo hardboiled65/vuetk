@@ -15,16 +15,46 @@
   export default {
     name: 'bl-view',
 
+    mixins: [
+      ViewMixin
+    ],
+
     props: {
+      constant: {
+        type: String,
+        default: null
+      },
+
       instance: {
         type: View,
         default: () => (new View())
       },
     },
 
-    mixins: [
-      ViewMixin
-    ],
+    computed: {
+      _constant() {
+        if (this.constant) {
+          return View[this.constant];
+        }
+        return null;
+      },
+
+      _anchorTop() {
+        return this.constant ? this._constant.anchorTop : this.anchorTop;
+      },
+
+      _anchorRight() {
+        return this.constant ? this._constant.anchorRight : this.anchorRight;
+      },
+
+      _anchorBottom() {
+        return this.constant ? this._constant.anchorBottom : this.anchorBottom;
+      },
+
+      _anchorLeft() {
+        return this.constant ? this._constant.anchorLeft : this.anchorLeft;
+      }
+    }
   }
 </script>
 
