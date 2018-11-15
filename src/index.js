@@ -2,6 +2,7 @@
 // Components
 //===============
 import BlView from './components/BlView'
+import BlStackView from './components/BlStackView'
 import BlBrowser from './components/BlBrowser'
 
 import BlWindow from './components/BlWindow'
@@ -50,6 +51,7 @@ export default {
     };
 
     Vue.component(BlView.name, BlView);
+    Vue.component(BlStackView.name, BlStackView);
     Vue.component(BlBrowser.name, BlBrowser);
     Vue.component(BlWindow.name, BlWindow);
     Vue.component(BlAlert.name, BlAlert);

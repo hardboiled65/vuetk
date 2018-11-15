@@ -36,14 +36,17 @@
         :anchorTop="10"
         :anchorRight="10">
       </bl-button>
-      <bl-browser
-        :instance="browser"
-        :anchorTop="0"
-        :anchorLeft="0"
-        @selectColumn="onSelectColumn"
-        @selectRow="onSelectRow">
-        <div class="preview"
-          style="width: auto;">
+      <bl-stack-view>
+        <bl-browser
+          :instance="browser"
+          :anchorTop="10"
+          :anchorLeft="10"
+          :anchorBottom="10"
+          :anchorRight="100"
+          @selectColumn="onSelectColumn"
+          @selectRow="onSelectRow">
+        </bl-browser>
+        <bl-view class="preview">
           <div class="preview-content"
             v-if="selectedFile !== null && selectedFile.type === 'text'">
             <bl-button
@@ -52,8 +55,8 @@
             <h3>{{ selectedFile.name }}</h3>
             <p>{{ selectedFile.data }}</p>
           </div>
-        </div>
-      </bl-browser>
+        </bl-view>
+      </bl-stack-view>
     </bl-view>
     <!-- Confirm delete -->
     <bl-alert

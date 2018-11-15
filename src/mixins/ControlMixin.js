@@ -47,7 +47,14 @@ export default {
           style.left = `${this._anchorLeft}px`;
         }
       } else if (this.$_ViewMixin_stick === 0b1111) {
+        style.display = 'absolute';
+        style.boxSizing = 'border-box';
+        style.width = '100%';
         style.height = '100%';
+        style.paddingTop = `${this._anchorTop}px`;
+        style.paddingRight = `${this._anchorRight}px`;
+        style.paddingBottom = `${this._anchorBottom}px`;
+        style.paddingLeft = `${this._anchorLeft}px`;
       }
 
       return style;
