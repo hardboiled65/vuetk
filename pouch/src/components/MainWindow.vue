@@ -36,7 +36,11 @@
         :anchorTop="10"
         :anchorRight="10">
       </bl-button>
-      <bl-stack-view>
+      <bl-stack-view
+        :anchorTop="10"
+        :anchorRight="100"
+        :anchorBottom="10"
+        :anchorLeft="10">
         <bl-browser
           :instance="browser"
           :anchorTop="10"

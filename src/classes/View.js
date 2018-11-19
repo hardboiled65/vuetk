@@ -1,5 +1,21 @@
 import Rect from './Rect'
 
+const Layout = {
+  None: 0,
+  Flexbox: 1,
+  Grid: 2,
+}
+
+const Orientation = {
+  Horizontal: 0,
+  Vertical: 1,
+}
+
+const Direction = {
+  LeftToRight: 0,
+  RightToLeft: 1,
+}
+
 class View {
   constructor() {
     this._rect = new Rect();
@@ -9,10 +25,19 @@ class View {
       bottom: null,
       left: null
     };
+    this._layout = View.Layout.None;
   }
 
   get rect() {
     return this._rect;
+  }
+
+  get layout() {
+    return this._layout;
+  }
+
+  set layout(val) {
+    this._layout = val;
   }
 
   get anchorTop() {
@@ -45,6 +70,13 @@ class View {
 
   set anchorLeft(left) {
     this._anchor.left = left;
+  }
+
+  //=================
+  // Constants
+  //=================
+  static get Layout() {
+    return Layout;
   }
 }
 

@@ -27,6 +27,7 @@ import SegmentedControl from './classes/SegmentedControl'
 import Icon from './classes/Icon'
 import Browser from './classes/Browser'
 import Toolbar from './classes/Toolbar'
+import View from './classes/View'
 
 export {
   ApplicationWindow,
@@ -38,6 +39,7 @@ export {
   Icon,
   Browser,
   Toolbar,
+  View,
 }
 
 export default {
@@ -66,6 +68,7 @@ export default {
       Button: Button,
       Menu: Menu,
       MenuItem: MenuItem,
+      View: View,
     };
 
     Vue.prototype.$vuetk = {

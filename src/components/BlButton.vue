@@ -2,7 +2,7 @@
   <button class="bl-button"
     v-if="instance"
     :class="buttonClass"
-    :style="controlStyle"
+    :style="buttonStyle"
     @click="instance.action">
     <span
       v-if="pushButton">{{ instance.title }}</span>
@@ -17,6 +17,10 @@
   export default {
     name: 'bl-button',
 
+    mixins: [
+      ControlMixin
+    ],
+
     props: {
       instance: {
         type: Button
@@ -27,10 +31,6 @@
         default: null
       },
     },
-
-    mixins: [
-      ControlMixin
-    ],
 
     computed: {
       buttonClass() {
@@ -43,6 +43,16 @@
 
       pushButton() {
         return this.instance.type === Button.ButtonType.PushButton;
+      },
+
+      //================
+      // Vue style
+      //================
+      buttonStyle() {
+        let style = Object.assign({}, this.controlStyle);
+        style.height = null;
+
+        return style;
       },
     }
   }

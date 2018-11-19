@@ -23,7 +23,7 @@
   import BlButton from './BlButton'
 
   import { Alert } from '../classes/Window'
-  import Button from '../classes/Button'
+  // import Button from '../classes/Button'
 
   export default {
     name: 'bl-alert',
@@ -49,6 +49,8 @@
       this.instance.buttons[0].action = () => {
         // True
         this.instance._callback(true);
+        this.$vuetk.state.modal = null;
+        this.$vuetk.state.modalOpened = false;
       }
       this.instance.buttons[1].action = () => {
         // False

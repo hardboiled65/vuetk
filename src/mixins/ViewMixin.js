@@ -3,7 +3,7 @@ const Stick = {
   Right: 0b0010,
   Bottom: 0b0100,
   Left: 0b1000
-};
+}
 
 export default {
   props: {
