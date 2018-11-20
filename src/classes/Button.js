@@ -9,7 +9,7 @@ class Button {
     this._action = null;
   }
 
-  //=================
+  //==================
   // Getters/Setters
   //==================
   get type() {

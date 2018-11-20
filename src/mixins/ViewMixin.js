@@ -56,7 +56,7 @@ export default {
     //================
     viewClass() {
       let cls = {
-        'bl-view': true
+        'bl-view': true,
       };
 
       if (this.sharedState.menuOpened || this.sharedState.modal !== null) {

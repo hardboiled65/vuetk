@@ -1,19 +1,58 @@
 import Rect from './Rect'
 
-const Layout = {
-  None: 0,
-  Flexbox: 1,
-  Grid: 2,
-}
+const LayoutType = Object.freeze({
+  None: Symbol('LayoutType.None'),
+  Flexbox: Symbol('LayoutType.Flexbox'),
+  Grid: Symbol('LayoutType.Grid'),
+})
 
-const Orientation = {
-  Horizontal: 0,
-  Vertical: 1,
-}
+const Orientation = Object.freeze({
+  Horizontal: Symbol('Orientation.Horizontal'),
+  Vertical: Symbol('Orientation.Vertical'),
+})
 
-const Direction = {
-  LeftToRight: 0,
-  RightToLeft: 1,
+const Direction = Object.freeze({
+  Auto: Symbol('Direction.Auto'),
+  LeftToRight: Symbol('Direction.LeftToRight'),
+  RightToLeft: Symbol('Direction.RightToLeft'),
+})
+
+class Layout {
+  constructor() {
+    this._type = Layout.LayoutType.None;
+    this._orientation = Layout.Orientation.Horizontal;
+    this._direction = Layout.Direction.Auto;
+  }
+
+  //=================
+  // Getters/Setters
+  //=================
+  get type() {
+    return this._type;
+  }
+
+  get orientation() {
+    return this._orientation;
+  }
+
+  get direction() {
+    return this._direction;
+  }
+
+  //=================
+  // Constants
+  //=================
+  static get LayoutType() {
+    return LayoutType;
+  }
+
+  static get Orientation() {
+    return Orientation;
+  }
+
+  static get Direction() {
+    return Direction;
+  }
 }
 
 class View {
@@ -25,7 +64,7 @@ class View {
       bottom: null,
       left: null
     };
-    this._layout = View.Layout.None;
+    this._layout = new View.Layout();
   }
 
   get rect() {

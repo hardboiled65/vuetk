@@ -4,6 +4,7 @@
 import BlView from './components/BlView'
 import BlStackView from './components/BlStackView'
 import BlBrowser from './components/BlBrowser'
+import BlTableView from './components/BlTableView'
 
 import BlWindow from './components/BlWindow'
 import BlAlert from './components/BlAlert'
@@ -63,6 +64,7 @@ export default {
     Vue.component(BlButton.name, BlButton);
     Vue.component(BlSegmentedControl.name, BlSegmentedControl);
     Vue.component(BlToolbarItem.name, BlToolbarItem);
+    Vue.component(BlTableView.name, BlTableView);
 
     Vue.prototype.$bl = {
       Button: Button,

@@ -36,7 +36,10 @@
         :anchorTop="10"
         :anchorRight="10">
       </bl-button>
-      <bl-stack-view
+      <bl-table-view
+        :instance="{}">
+      </bl-table-view>
+      <bl-view
         :anchorTop="10"
         :anchorRight="100"
         :anchorBottom="10"
@@ -60,7 +63,7 @@
             <p>{{ selectedFile.data }}</p>
           </div>
         </bl-view>
-      </bl-stack-view>
+      </bl-view>
     </bl-view>
     <!-- Confirm delete -->
     <bl-alert
