@@ -21,7 +21,6 @@
 <script>
   import BlView from './BlView'
 
-  import ViewMixin from '../mixins/ViewMixin'
   import ControlMixin from '../mixins/ControlMixin'
 
   import Browser from '../classes/Browser'

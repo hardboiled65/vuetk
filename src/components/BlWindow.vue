@@ -56,7 +56,6 @@
   import ViewMixin from '../mixins/ViewMixin'
 
   import { ApplicationWindow } from '../classes/Window'
-  import Menu from '../classes/Menu'
   import Toolbar from '../classes/Toolbar'
   import View from '../classes/View'
   import Image from '../classes/Image'

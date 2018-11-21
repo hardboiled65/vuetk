@@ -17,11 +17,18 @@ const Direction = Object.freeze({
   RightToLeft: Symbol('Direction.RightToLeft'),
 })
 
+class Constraint {
+  constructor() {
+    this._width = 0;
+  }
+}
+
 class Layout {
   constructor() {
     this._type = Layout.LayoutType.None;
     this._orientation = Layout.Orientation.Horizontal;
     this._direction = Layout.Direction.Auto;
+    this._constraint = new Layout.Constraint();
   }
 
   //=================
@@ -52,6 +59,10 @@ class Layout {
 
   static get Direction() {
     return Direction;
+  }
+
+  static get Constraint() {
+    return Constraint;
   }
 }
 
