@@ -12,6 +12,10 @@ export default {
   name: 'app',
   components: {
     MainWindow,
+  },
+
+  created() {
+    this.$vuetk.app = this;
   }
 }
 </script>

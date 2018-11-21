@@ -1,7 +1,7 @@
 <template>
   <section
     :class="blViewClass"
-    :style="viewStyle"
+    :style="blViewStyle"
     @click="$emit('click', $event)">
     <slot></slot>
   </section>
@@ -37,6 +37,11 @@
 
       orientation: {
         type: Symbol,
+        default: null
+      },
+
+      width: {
+        type: [Number, String],
         default: null
       },
     },
@@ -78,8 +83,33 @@
         }, this.viewClass);
 
         return cls;
+      },
+
+      blViewStyle() {
+        let style = Object.assign({}, this.viewStyle);
+
+        const inst = this._constant || this.instance;
+        if (inst.rect.width !== null) {
+          style.width = `${inst.rect.width}px`;
+          style.flexShrink = '0';
+        } else {
+          style.width = '0';
+          style.flexGrow = '1';
+        }
+
+        if (this.constant === 'WindowBody') {
+          style.width = '100%';
+        }
+
+        return style;
       }
-    }
+    },
+
+    created() {
+      if (this.width !== null) {
+        this.instance.rect.width = this.width;
+      }
+    },
   }
 </script>
 

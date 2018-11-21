@@ -58,13 +58,14 @@
 <style scoped>
   .bl-browser {
     display: flex;
-    height: 80%;
+    overflow-x: auto;
   }
 
   .bl-browser .column {
     width: 300px;
     border-right: 1px solid grey;
     background-color: #ffffff;
+    flex-shrink: 0;
   }
 
   .bl-browser .column .row:hover {

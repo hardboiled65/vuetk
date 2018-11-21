@@ -2,7 +2,7 @@
 // Components
 //===============
 import BlView from './components/BlView'
-import BlStackView from './components/BlStackView'
+import BlSplitView from './components/BlSplitView'
 import BlBrowser from './components/BlBrowser'
 import BlTableView from './components/BlTableView'
 
@@ -47,14 +47,13 @@ export default {
   install(Vue, options) {
     // Global state
     var state = {
-      app: null,
       modal: null,
       menuOpened: false,
       modalOpened: false,
     };
 
     Vue.component(BlView.name, BlView);
-    Vue.component(BlStackView.name, BlStackView);
+    Vue.component(BlSplitView.name, BlSplitView);
     Vue.component(BlBrowser.name, BlBrowser);
     Vue.component(BlWindow.name, BlWindow);
     Vue.component(BlAlert.name, BlAlert);
@@ -74,6 +73,7 @@ export default {
     };
 
     Vue.prototype.$vuetk = {
+      app: null,
       state: state,
     };
   },

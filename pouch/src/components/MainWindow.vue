@@ -31,29 +31,30 @@
     <!-- Window body -->
     <bl-view
       constant="WindowBody">
-      <bl-button
-        :instance="newFolderButton"
-        :anchorTop="10"
-        :anchorRight="10">
-      </bl-button>
-      <bl-table-view
-        :instance="{}">
-      </bl-table-view>
-      <bl-view
-        :anchorTop="10"
-        :anchorRight="100"
-        :anchorBottom="10"
-        :anchorLeft="10">
-        <bl-browser
-          :instance="browser"
-          :anchorTop="10"
-          :anchorLeft="10"
-          :anchorBottom="10"
-          :anchorRight="100"
-          @selectColumn="onSelectColumn"
-          @selectRow="onSelectRow">
-        </bl-browser>
-        <bl-view class="preview">
+      <bl-split-view
+        :anchorTop="0"
+        :anchorRight="0"
+        :anchorBottom="0"
+        :anchorLeft="0">
+        <bl-view
+          :width="200">
+          <bl-table-view
+            :instance="{}">
+          </bl-table-view>
+        </bl-view>
+        <bl-view>
+          <bl-browser
+            :instance="browser"
+            :anchorTop="10"
+            :anchorLeft="10"
+            :anchorBottom="10"
+            :anchorRight="10"
+            @selectColumn="onSelectColumn"
+            @selectRow="onSelectRow">
+          </bl-browser>
+        </bl-view>
+        <bl-view class="preview"
+          :width="300">
           <div class="preview-content"
             v-if="selectedFile !== null && selectedFile.type === 'text'">
             <bl-button
@@ -63,7 +64,7 @@
             <p>{{ selectedFile.data }}</p>
           </div>
         </bl-view>
-      </bl-view>
+      </bl-split-view>
     </bl-view>
     <!-- Confirm delete -->
     <bl-alert
@@ -108,7 +109,6 @@
     extends: BlWindow,
 
     data: () => ({
-      menus: [],
       //===================
       // Unique references
       //===================
@@ -151,8 +151,6 @@
     },
 
     created() {
-      this.$bl.app = this;
-
       // Set menus
       this.mainMenu = new Menu(Menu.MenuType.MenuBarMenu, 'MainMenu');
 
@@ -187,10 +185,6 @@
 
       // Set browser
       this.browser = new Browser();
-      this.browser.anchorTop = 0;
-      this.browser.anchorRight = 0;
-      this.browser.anchorBottom = 0;
-      this.browser.anchorLeft = 0;
       this.browser.addColumn();
       this.browser.addColumn();
 
@@ -240,6 +234,7 @@
       //===================
       createEditor() {
         this.editor = new ApplicationWindow(ApplicationWindow.WindowType.Panel);
+        this.editor.title = 'Text Editor';
       },
 
       // File handling
