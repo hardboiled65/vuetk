@@ -1,5 +1,8 @@
 import Rect from './Rect'
 
+//====================
+// Enums
+//====================
 const LayoutType = Object.freeze({
   None: Symbol('LayoutType.None'),
   Flexbox: Symbol('LayoutType.Flexbox'),
@@ -17,9 +20,41 @@ const Direction = Object.freeze({
   RightToLeft: Symbol('Direction.RightToLeft'),
 })
 
-class Constraint {
+const LayoutPolicyType = Object.freeze({
+  Fixed: Symbol('LayoutPolicy.Fixed'),
+  Auto: Symbol('LayoutPolicy.Auto'),
+})
+
+class LayoutPolicy {
   constructor() {
-    this._width = 0;
+    this._width = LayoutPolicyType.Fixed;
+    this._height = LayoutPolicyType.Fixed;
+  }
+
+  //==================
+  // Getters/Setters
+  //==================
+  get width() {
+    return this._width;
+  }
+
+  set width(widthPolicy) {
+    this._width = widthPolicy;
+  }
+
+  get height() {
+    return this._height;
+  }
+
+  set height(heightPolicy) {
+    this._height = heightPolicy;
+  }
+
+  //==================
+  // Constants
+  //==================
+  static get LayoutPolicyType() {
+    return LayoutPolicyType;
   }
 }
 
@@ -28,7 +63,7 @@ class Layout {
     this._type = Layout.LayoutType.None;
     this._orientation = Layout.Orientation.Horizontal;
     this._direction = Layout.Direction.Auto;
-    this._constraint = new Layout.Constraint();
+    this._policy = new Layout.LayoutPolicy();
   }
 
   //=================
@@ -46,6 +81,10 @@ class Layout {
     return this._direction;
   }
 
+  get policy() {
+    return this._policy;
+  }
+
   //=================
   // Constants
   //=================
@@ -61,8 +100,8 @@ class Layout {
     return Direction;
   }
 
-  static get Constraint() {
-    return Constraint;
+  static get LayoutPolicy() {
+    return LayoutPolicy;
   }
 }
 
@@ -128,9 +167,16 @@ class View {
   static get Layout() {
     return Layout;
   }
+
+  static get LayoutPolicyType() {
+    return LayoutPolicyType;
+  }
 }
 
-View.WindowBody = (() => {
+//=================
+// Constants
+//=================
+View.windowBody = (() => {
   let view = new View();
   view.anchorTop = 0;
   view.anchorLeft = 0;

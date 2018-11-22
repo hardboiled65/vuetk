@@ -1,7 +1,7 @@
 <template>
   <div class="bl-split-view"
     :class="splitViewClass"
-    :style="viewStyle">
+    :style="splitViewStyle">
     <slot></slot>
   </div>
 </template>
@@ -52,6 +52,15 @@
       splitViewClass() {
         let cls = {
         };
+
+        return cls;
+      },
+
+      //=================
+      // Vue style
+      //=================
+      splitViewStyle() {
+        let cls = Object.assign({}, this.viewStyle);
 
         return cls;
       },
@@ -116,14 +125,17 @@
         this.dividerRect.x = evt.clientX;
         this.dividerRect.y = evt.clientY;
         this.dividerIndex = this.$_getDividerIndexByElement(evt.target);
+
         this.documentMousemoveHandler = (evt) => {
           this.cursorRect.x = evt.clientX;
           this.cursorRect.y = evt.clientY;
           let offset = this.cursorRect.x - this.dividerRect.x;
-          if (this.subviewBeforeDivider.rect.width !== null) {
+          if (this.subviewBeforeDivider.rect.width >= 0 &&
+              this.subviewAfterDivider.rect.width > 0) {
+            console.log(this.subviewBeforeDivider.rect.width, this.subviewAfterDivider.rect.width);
             this.subviewBeforeDivider.rect.width += offset;
           }
-          if (this.subviewAfterDivider.rect.width !== null) {
+          if (this.subviewAfterDivider.rect.width >= 0) {
             this.subviewAfterDivider.rect.width -= offset;
           }
           this.dividerRect.x = evt.clientX;

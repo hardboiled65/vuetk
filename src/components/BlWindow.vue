@@ -36,8 +36,11 @@
       </slot>
     </bl-toolbar>
     <!-- Window's body -->
-    <slot name="body">
-    </slot>
+    <bl-view
+      constant="windowBody">
+      <slot name="body">
+      </slot>
+    </bl-view>
     <!-- Other components out of window view -->
     <slot></slot>
     <!-- DEBUG -->
@@ -52,6 +55,7 @@
 
 <script>
   import BlToolbar from './BlToolbar'
+  import BlView from './BlView'
 
   import ViewMixin from '../mixins/ViewMixin'
 
@@ -65,6 +69,7 @@
 
     components: {
       BlToolbar,
+      BlView,
     },
 
     mixins: [
@@ -161,6 +166,10 @@
           document.title = newVal;
         }
       },
+
+      'instance.title'(newVal) {
+        this.title = newVal;
+      },
     },
 
     created() {
@@ -168,7 +177,7 @@
         document.title = this.title;
         let favicon = document.createElement('link');
         favicon.rel = 'icon';
-        favicon.href = Image.SystemImage.ActionTemplate.src('16x16');
+        favicon.href = Image.SystemImage.applicationIcon.src('16x16');
         document.head.appendChild(favicon);
       }
 
@@ -411,10 +420,13 @@
   .bl-window.alert {
     background-color: lightgrey;
   }
+
+  .bl-window.alert .bl-view {
+    pointer-events: auto;
+  }
 </style>
 
 <style scoped>
-
   .bl-window .title-bar {
     height: 32px;
     background-color: #e2dfde;

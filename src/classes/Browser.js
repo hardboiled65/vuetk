@@ -12,7 +12,7 @@ class Browser extends Control {
     this._columns = [];
   }
 
-  //=================
+  //==================
   // Getters/Setters
   //==================
   get columns() {

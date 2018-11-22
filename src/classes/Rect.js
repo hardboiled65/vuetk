@@ -2,8 +2,8 @@ class Rect {
   constructor() {
     this._x = 0;
     this._y = 0;
-    this._width = null;
-    this._height = null;
+    this._width = 0;
+    this._height = 0;
   }
 
   //==================
@@ -38,7 +38,7 @@ class Rect {
   }
 
   set height(height) {
-    this._height = height;
+    this._height = (height >= 0) ? height : 0;
   }
 }
 

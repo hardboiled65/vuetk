@@ -5,24 +5,32 @@
     :setButtonWindowMinimize="false"
     @windowBlink="onWindowBlink">
     <template slot="body">
-      <img :src="instance.icon.src('32x32')">
-      <h1 v-if="instance.message">{{ instance.message }}</h1>
-      <div>{{ instance.informativeText }}</div>
-      <div class="buttons">
-        <bl-button
-          v-for="(button, idx) in instance.buttons" :key="idx"
-          :instance="button">
-        </bl-button>
-      </div>
+      <bl-view
+        :layoutType="$bl.View.Layout.LayoutType.Flexbox">
+        <bl-image-view
+          :instance="imageView">
+        </bl-image-view>
+        <h1 v-if="instance.message">{{ instance.message }}</h1>
+        <div>{{ instance.informativeText }}</div>
+        <div class="buttons">
+          <bl-button
+            v-for="(button, idx) in instance.buttons" :key="idx"
+            :instance="button">
+          </bl-button>
+        </div>
+      </bl-view>
     </template>
   </bl-window>
 </template>
 
 <script>
   import BlWindow from './BlWindow'
+  import BlView from './BlView'
   import BlButton from './BlButton'
+  import BlImageView from './BlImageView'
 
   import { Alert } from '../classes/Window'
+  import ImageView from '../classes/ImageView'
   // import Button from '../classes/Button'
 
   export default {
@@ -30,7 +38,9 @@
 
     components: {
       BlWindow,
+      BlView,
       BlButton,
+      BlImageView,
     },
 
     props: {
@@ -46,6 +56,10 @@
     }),
 
     created() {
+      this.imageView = new ImageView(this.instance.icon);
+      this.imageView.width = 64;
+      this.imageView.height = 64;
+
       this.instance.buttons[0].action = () => {
         // True
         this.instance._callback(true);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bl-table-view">
   </div>
 </template>
 

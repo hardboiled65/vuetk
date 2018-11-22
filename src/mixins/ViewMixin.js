@@ -73,7 +73,12 @@ export default {
         flexGrow: this.$_ViewMixin_flexGrow,
       };
       if (this.$_ViewMixin_flexGrow === '1') {
-        style.height = '100%';
+        // style.height = '100%';
+        style.position = 'absolute';
+        style.top = `${this._anchorTop}px`;
+        style.right = `${this._anchorRight}px`;
+        style.bottom = `${this._anchorBottom}px`;
+        style.left = `${this._anchorLeft}px`;
       }
 
       return style;

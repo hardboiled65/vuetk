@@ -30,7 +30,7 @@
     </bl-toolbar>
     <!-- Window body -->
     <bl-view
-      constant="WindowBody">
+      constant="windowBody">
       <bl-split-view
         :anchorTop="0"
         :anchorRight="0"
@@ -42,7 +42,8 @@
             :instance="{}">
           </bl-table-view>
         </bl-view>
-        <bl-view>
+        <bl-view
+          :width="'Auto'">
           <bl-browser
             :instance="browser"
             :anchorTop="10"
@@ -151,6 +152,8 @@
     },
 
     created() {
+      this.instance.title = 'Pouch';
+
       // Set menus
       this.mainMenu = new Menu(Menu.MenuType.MenuBarMenu, 'MainMenu');
 
@@ -413,7 +416,8 @@
       deleteFileAction() {
         let alert = new Alert('Delete');
         alert.informativeText = 'Are you sure to delete file?';
-        alert.icon = new Icon('Control.Action');
+        // alert.icon = new Icon('Control.Action');
+        alert.buttons[0].title = 'Delete';
         alert.runModal(this);
       },
     }

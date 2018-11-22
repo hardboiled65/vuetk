@@ -1,3 +1,10 @@
+import Rect from './Rect'
+import Button from './Button'
+import Image from './Image'
+
+//====================
+// Enums
+//====================
 const WindowType = {
   DocumentWindow: 0,
   AppWindow: 1,
@@ -8,20 +15,19 @@ const WindowType = {
   AlertWindow: 12,
 }
 
-const WindowState = {
-  Main: 0,
-  Key: 1,
-  Inactive: 2,
-}
-
-import Button from './Button'
+const WindowState = Object.freeze({
+  Main: Symbol('WindowState.Main'),
+  Key: Symbol('WindowState.Key'),
+  Inactive: Symbol('WindowState.Inactive'),
+})
 
 class ApplicationWindow {
   constructor(type) {
     this._type = type;
     this._title = '';
-    this._x = 0;
-    this._y = 0;
+    this._rect = new Rect();
+    this._rect.x = 0;
+    this._rect.y = 0;
   }
 
   //==================
@@ -32,19 +38,19 @@ class ApplicationWindow {
   }
 
   get x() {
-    return this._x;
+    return this._rect.x;
   }
 
   set x(posX) {
-    this._x = posX;
+    this._rect.x = posX;
   }
 
   get y() {
-    return this._y;
+    return this._rect.y;
   }
 
   set y(posY) {
-    this._y = (posY >= 0) ? posY : 0;
+    this._rect.y = (posY >= 0) ? posY : 0;
   }
 
   get title() {
@@ -74,6 +80,7 @@ class Alert extends ApplicationWindow {
     this._message = message;
     this._informativeText = informativeText;
     this._buttons = [];
+    this._icon = Image.SystemImage.caution;
 
     // Set default buttons.
     this._buttons.push(new Button());
@@ -107,6 +114,14 @@ class Alert extends ApplicationWindow {
 
   get buttons() {
     return this._buttons;
+  }
+
+  get icon() {
+    return this._icon;
+  }
+
+  set icon(image) {
+    this._icon = image;
   }
 
   runModal(vm, callback) {

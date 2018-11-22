@@ -89,15 +89,17 @@
         let style = Object.assign({}, this.viewStyle);
 
         const inst = this._constant || this.instance;
-        if (inst.rect.width !== null) {
+
+        if (inst.layout.policy.width === View.LayoutPolicyType.Fixed) {
           style.width = `${inst.rect.width}px`;
           style.flexShrink = '0';
-        } else {
+        } else if (inst.layout.policy.width === View.LayoutPolicyType.Auto) {
           style.width = '0';
           style.flexGrow = '1';
         }
 
-        if (this.constant === 'WindowBody') {
+        if (this.constant === 'windowBody') {
+          style.position = 'relative';
           style.width = '100%';
         }
 
@@ -106,8 +108,16 @@
     },
 
     created() {
-      if (this.width !== null) {
+      if (this.width !== null && (typeof this.width) !== 'string') {
         this.instance.rect.width = this.width;
+      } else if (this.width === 'Auto') {
+        this.instance.layout.policy.width = View.LayoutPolicyType.Auto;
+      }
+    },
+
+    mounted() {
+      if (this.width === 'Auto') {
+        this.instance.rect.width = this.$el.offsetWidth;
       }
     },
   }
