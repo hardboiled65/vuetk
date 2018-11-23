@@ -28,7 +28,7 @@ const LayoutPolicyType = Object.freeze({
 class LayoutPolicy {
   constructor() {
     this._width = LayoutPolicyType.Fixed;
-    this._height = LayoutPolicyType.Fixed;
+    this._height = LayoutPolicyType.Auto;
   }
 
   //==================
@@ -73,8 +73,16 @@ class Layout {
     return this._type;
   }
 
+  set type(layoutType) {
+    this._type = layoutType;
+  }
+
   get orientation() {
     return this._orientation;
+  }
+
+  set orientation(orientation) {
+    this._orientation = orientation;
   }
 
   get direction() {

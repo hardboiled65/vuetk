@@ -5,15 +5,14 @@ import Image from './Image'
 //====================
 // Enums
 //====================
-const WindowType = {
-  DocumentWindow: 0,
-  AppWindow: 1,
-  Panel: 2,
-  Dialog: 3,
-  Alert: 4,
-  MainWindow: 10,
-  AlertWindow: 12,
-}
+const WindowType = Object.freeze({
+  DocumentWindow: Symbol('WindowType.DocumentWindow'),
+  AppWindow: Symbol('WindowType.AppWindow'),
+  Panel: Symbol('WindowType.Panel'),
+  Dialog: Symbol('WindowType.Dialog'),
+  Alert: Symbol('WindowType.Alert'),
+  MainWindow: Symbol('WindowType.MainWindow'),
+})
 
 const WindowState = Object.freeze({
   Main: Symbol('WindowState.Main'),
@@ -28,6 +27,7 @@ class ApplicationWindow {
     this._rect = new Rect();
     this._rect.x = 0;
     this._rect.y = 0;
+    this._state = WindowState.Inactive;
   }
 
   //==================
@@ -35,6 +35,18 @@ class ApplicationWindow {
   //==================
   get type() {
     return this._type;
+  }
+
+  get state() {
+    return this._state;
+  }
+
+  set state(windowState) {
+    this._state = windowState;
+  }
+
+  get rect() {
+    return this._rect;
   }
 
   get x() {
@@ -76,7 +88,6 @@ class ApplicationWindow {
 class Alert extends ApplicationWindow {
   constructor(message=null, informativeText='This is an alert.') {
     super(WindowType.Alert);
-    // this._type = WindowType.AlertWindow;
     this._message = message;
     this._informativeText = informativeText;
     this._buttons = [];

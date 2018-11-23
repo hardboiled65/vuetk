@@ -80,6 +80,10 @@
           'grid': inst.layout.type === View.Layout.LayoutType.Grid,
           'horizontal': inst.layout.orientation === View.Layout.Orientation.Horizontal,
           'vertical': inst.layout.orientation === View.Layout.Orientation.Vertical,
+          'width-fixed': inst.layout.policy.width === View.LayoutPolicyType.Fixed,
+          'width-auto': inst.layout.policy.width === View.LayoutPolicyType.Auto,
+          'height-fixed': inst.layout.policy.height === View.LayoutPolicyType.Fixed,
+          'height-auto': inst.layout.policy.height === View.LayoutPolicyType.Auto,
         }, this.viewClass);
 
         return cls;
@@ -104,10 +108,18 @@
         }
 
         return style;
-      }
+      },
     },
 
     created() {
+      // Sync layouts.
+      if (this.layoutType !== null) {
+        this.instance.layout.type = this.layoutType;
+      }
+      if (this.orientation !== null) {
+        this.instance.layout.orientation = this.orientation;
+      }
+
       if (this.width !== null && (typeof this.width) !== 'string') {
         this.instance.rect.width = this.width;
       } else if (this.width === 'Auto') {
@@ -119,7 +131,13 @@
       if (this.width === 'Auto') {
         this.instance.rect.width = this.$el.offsetWidth;
       }
+      if (this.height === 'Auto') {
+        this.instance.rect.height = this.$el.offsetHeight;
+      }
     },
+
+    methods: {
+    }
   }
 </script>
 
@@ -127,6 +145,10 @@
   .bl-view {
     display: flex;
     position: relative;
+  }
+
+  .bl-view.flexbox {
+    display: flex;
   }
 
   .bl-view.flexbox.horizontal {

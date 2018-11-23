@@ -6,7 +6,9 @@
     @windowBlink="onWindowBlink">
     <template slot="body">
       <bl-view
-        :layoutType="$bl.View.Layout.LayoutType.Flexbox">
+        :layoutType="$bl.View.Layout.LayoutType.Flexbox"
+        :orientation="$bl.View.Layout.Orientation.Vertical"
+        :width="300">
         <bl-image-view
           :instance="imageView">
         </bl-image-view>
@@ -56,10 +58,15 @@
     }),
 
     created() {
+      // Set as key window.
+      this.instance.state = Alert.WindowState.Key;
+
+      // Set icon.
       this.imageView = new ImageView(this.instance.icon);
       this.imageView.width = 64;
       this.imageView.height = 64;
 
+      // Set buttons.
       this.instance.buttons[0].action = () => {
         // True
         this.instance._callback(true);

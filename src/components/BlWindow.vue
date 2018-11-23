@@ -80,7 +80,7 @@
       instance: {
         type: ApplicationWindow,
         default: () => (
-          new ApplicationWindow(ApplicationWindow.WindowType.MainWindow)
+          new ApplicationWindow(ApplicationWindow.WindowType.AppWindow)
         )
       },
 
@@ -100,6 +100,7 @@
       moving: false,
       toolbar: null,
 
+      windowResizeHandler: null,
       documentDragoverHandler: null,
       documentMousemoveHandler: null,
       cursorRect: {
@@ -134,10 +135,20 @@
       // Vue class
       //=================
       windowClass() {
-         return {
+        const {
+          WindowType,
+          WindowState,
+        } = ApplicationWindow;
+
+        return {
           'main-window': this.mainWindow,
           'sub-window': !this.mainWindow,
-          'alert': this.instance.type === ApplicationWindow.WindowType.Alert,
+          'document-window': this.instance.type === WindowType.DocumentWindow,
+          'app-window': this.instance.type === WindowType.AppWindow,
+          'panel': this.instance.type === WindowType.Panel,
+          'dialog': this.instance.type === WindowType.Dialog,
+          'alert': this.instance.type === WindowType.Alert,
+          'key': this.instance.state === WindowState.Key,
         };
       },
 
@@ -157,6 +168,14 @@
 
       modal() {
         return this.sharedState.modal;
+      },
+
+      posibleMinimumWidth() {
+        return 10;
+      },
+
+      posibleMinimumHeight() {
+        return 10;
       },
     },
 
@@ -194,6 +213,26 @@
       this.$el.addEventListener('contextmenu', e => {
         e.preventDefault();
       });
+
+      this.instance.rect.width = this.$el.offsetWidth;
+      this.instance.rect.height = this.$el.offsetHeight;
+
+      if (this.instance.type === ApplicationWindow.WindowType.AppWindow) {
+        if (this.windowResizeHandler === null) {
+          this.windowResizeHandler = (evt) => {
+            this.instance.rect.width = this.$el.offsetWidth;
+            this.instance.rect.height = this.$el.offsetHeight;
+          };
+          window.addEventListener('resize', this.windowResizeHandler);
+        }
+      }
+    },
+
+    destroyed() {
+      if (this.windowResizeHandler) {
+        window.removeEventListener('resize', this.windowResizeHandler);
+        this.windowResizeHandler = null;
+      }
     },
 
     methods: {
@@ -227,9 +266,9 @@
         let intervalId = setInterval(() => {
           const classList = this.$refs.titleBar.classList;
           if (!classList.contains('indicator')) {
-            this.$refs.titleBar.classList.add('indicator');
+            classList.add('indicator');
           } else {
-            this.$refs.titleBar.classList.remove('indicator');
+            classList.remove('indicator');
           }
         }, 50);
         setTimeout(() => {
@@ -418,11 +457,15 @@
   }
 
   .bl-window.alert {
-    background-color: lightgrey;
+    background-color: #ECECEC;
   }
 
   .bl-window.alert .bl-view {
     pointer-events: auto;
+  }
+
+  .bl-window.key {
+    z-index: 1;
   }
 </style>
 
