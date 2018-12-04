@@ -1,5 +1,6 @@
 <template>
-  <div class="bl-image-view">
+  <div class="bl-image-view"
+    :style="imageViewStyle">
     <img
       :src="imageSrc"
       :width="instance.width"
@@ -29,6 +30,18 @@
     computed: {
       imageSrc() {
         return this.instance.image.src('32x32');
+      },
+
+      //================
+      // Vue style
+      //================
+      imageViewStyle() {
+        let style = Object.assign({
+          width: `${this.instance.width}px`,
+          height: `${this.instance.height}px`,
+        }, this.controlStyle);
+
+        return style;
       },
     },
   }

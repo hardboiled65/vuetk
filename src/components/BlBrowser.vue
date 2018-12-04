@@ -9,6 +9,7 @@
         $emit('selectRow', columnIdx, null);
       }">
       <div class="row"
+        style="text-align: left;"
         v-for="(row, idx) in column.rows" :key="idx"
         @click.stop="$emit('selectRow', columnIdx, idx)">
         <span>{{ row }}</span>

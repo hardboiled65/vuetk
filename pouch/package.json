@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:github-pages": "vue-cli-service build --mode github-pages",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -40,6 +41,6 @@
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not ie <= 8"
+    "not ie <= 9"
   ]
 }

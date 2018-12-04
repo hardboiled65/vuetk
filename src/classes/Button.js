@@ -1,11 +1,15 @@
+import Control from './Control'
+
 const ButtonType = {
   PushButton: 0,
 }
 
-class Button {
+class Button extends Control {
   constructor(type=Button.ButtonType.PushButton, title=null) {
+    super();
     this._type = type;
     this._title = title;
+    this._image = null;
     this._action = null;
   }
 
@@ -26,6 +30,14 @@ class Button {
 
   set title(title) {
     this._title = title;
+  }
+
+  get image() {
+    return this._image;
+  }
+
+  set image(image) {
+    this._image = image;
   }
 
   get action() {

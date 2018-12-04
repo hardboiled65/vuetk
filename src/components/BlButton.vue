@@ -3,8 +3,9 @@
     v-if="instance"
     :class="buttonClass"
     :style="buttonStyle"
+    :disabled="!instance.enabled"
     @click="instance.action">
-    <span
+    <span class="_styler"
       v-if="pushButton">{{ instance.title }}</span>
   </button>
 </template>
@@ -52,9 +53,19 @@
         let style = Object.assign({}, this.controlStyle);
         style.height = null;
 
+        if (!this.instance.enabled) {
+          style.pointerEvents = 'none';
+        }
+
         return style;
       },
-    }
+    },
+
+    created() {
+      if (this.title !== null) {
+        this.instance.title = this.title;
+      }
+    },
   }
 </script>
 
@@ -73,7 +84,7 @@
     align-items: center;
   }
 
-  .bl-button.push-button span {
+  .bl-button.push-button ._styler {
     height: 30px;
     width: 100%;
     background: linear-gradient(
@@ -85,7 +96,7 @@
     justify-content: center;
   }
 
-  .bl-button.push-button:active {
+  .bl-button.push-button:active ._styler {
     background-color: #dddddd;
   }
 </style>

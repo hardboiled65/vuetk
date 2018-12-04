@@ -30,6 +30,8 @@
         subviewResizing: false,
         dividerIndex: null,
 
+        subviews: [],
+
         dividerElements: [],
 
         dividerRect: {
@@ -66,15 +68,7 @@
       },
 
       $_subviewsLength() {
-        return this.$slots.default.length;
-      },
-
-      subviews() {
-        let subviews = [];
-        for (let i = 0; i < this.$_subviewsLength; ++i) {
-          subviews.push(this.$slots.default[i].componentInstance.instance);
-        }
-        return subviews;
+        return this.subviews.length;
       },
 
       subviewBeforeDivider() {
@@ -105,18 +99,21 @@
     },
 
     mounted() {
-      for (let i = 1; i < this.$_subviewsLength; ++i) {
-        let divider = document.createElement('div');
-        divider.className = 'divider';
-
-        // Add event listeners.
-        divider.addEventListener('mousedown', this.dividerMousedownHandler);
-
-        // Insert divider.
-        const parent = this.$slots.default[i].elm.parentNode;
-        parent.insertBefore(divider, this.$slots.default[i].elm);
-        this.dividerElements.push(divider);
+      for (let i = 0; i < this.$children.length; ++i) {
+        this.subviews.push(this.$slots.default[i].componentInstance.instance);
       }
+      this.createDividers();
+    },
+
+    updated() {
+      // Re-create subview list.
+      this.subviews = [];
+      for (let i = 0; i < this.$children.length; ++i) {
+        this.subviews.push(this.$slots.default[i].componentInstance.instance);
+      }
+      // Update dividers.
+      this.destroyDividers();
+      this.createDividers();
     },
 
     methods: {
@@ -153,6 +150,32 @@
           }
         };
         document.addEventListener('mouseup', this.documentMouseupHandler);
+      },
+
+      createDividers() {
+        for (let i = 1; i < this.$_subviewsLength; ++i) {
+          let divider = document.createElement('div');
+          divider.className = 'divider';
+
+          // Add event listeners.
+          divider.addEventListener('mousedown', this.dividerMousedownHandler);
+
+          // Insert divider.
+          const parent = this.$slots.default[i].elm.parentNode;
+          parent.insertBefore(divider, this.$slots.default[i].elm);
+          this.dividerElements.push(divider);
+        }
+      },
+
+      destroyDividers() {
+        const dividers = this.dividerElements;
+        const length = dividers.length;
+        for (let i = length - 1; i >= 0; --i) {
+          dividers[i].removeEventListener('mousedown',
+            this.dividerMousedownHandler);
+          dividers[i].remove();
+          dividers.pop();
+        }
       },
 
       $_getDividerIndexByElement(el) {

@@ -99,6 +99,10 @@
           style.flexShrink = '0';
         } else if (inst.layout.policy.width === View.LayoutPolicyType.Auto) {
           style.width = '0';
+          // The view has no siblings, "width: 0" will collapse view as 0px.
+          if (this.$_siblingInstances.length === 0) {
+            style.width = 'auto';
+          }
           style.flexGrow = '1';
         }
 
@@ -109,6 +113,20 @@
 
         return style;
       },
+
+      $_siblingInstances() {
+        let children = [];
+        if (this.constant === 'windowBody') {
+          return children;
+        }
+        const siblings = this.$parent.$children;
+        for (let i = 0; i < siblings.length; ++i) {
+          if (siblings[i].instance !== this.instance) {
+            children.push(siblings[i].instance);
+          }
+        }
+        return children;
+      }
     },
 
     created() {

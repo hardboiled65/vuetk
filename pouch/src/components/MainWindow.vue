@@ -14,18 +14,19 @@
           :anchorTop="slotProps.anchorTop"
           :anchorRight="slotProps.anchorRight"
           :anchorBottom="slotProps.anchorBottom"
-          :anchorLeft="slotProps.anchorLeft">
+          :anchorLeft="slotProps.anchorLeft"
+          :enabled="pwd !== '/'">
         </bl-button>
+      </bl-toolbar-item>
+      <bl-toolbar-item label="View">
+        <bl-segmented-control
+          :instance="viewSegments">
+        </bl-segmented-control>
       </bl-toolbar-item>
       <bl-toolbar-item label="New Folder">
         <bl-button
           :instance="newFolderButton">
         </bl-button>
-      </bl-toolbar-item>
-      <bl-toolbar-item label="Move">
-        <bl-segmented-control
-          :instance="moveSegments">
-        </bl-segmented-control>
       </bl-toolbar-item>
     </bl-toolbar>
     <!-- Window body -->
@@ -55,6 +56,7 @@
           </bl-browser>
         </bl-view>
         <bl-view class="preview"
+          v-if="selectedFile !== null"
           :width="300">
           <div class="preview-content"
             v-if="selectedFile !== null && selectedFile.type === 'text'">
@@ -98,9 +100,9 @@
     MenuItem,
     Button,
     SegmentedControl,
-    Icon,
     Browser,
     Toolbar,
+    Image,
   } from '@hardboiled65/vuetk'
 
   import BlWindow from '@hardboiled65/vuetk/src/components/BlWindow'
@@ -123,7 +125,7 @@
       newFolderButton: null,
       editButton: null,
       editor: null,
-      moveSegments: null,
+      viewSegments: null,
       //===============
       // State
       //===============
@@ -182,9 +184,12 @@
       this.toolbar = new Toolbar();
 
       // Set segmented controls
-      this.moveSegments = new SegmentedControl();
-      this.moveSegments.addSegment().label = 'Back';
-      this.moveSegments.addSegment().label = 'Forward';
+      this.viewSegments = new SegmentedControl();
+      // this.viewSegments.addSegment().label = 'List';
+      this.viewSegments.addSegment().image = Image.SystemImage.listViewTemplate;
+      // this.viewSegments.addSegment().label = 'Browser';
+      this.viewSegments.addSegment().image = Image.SystemImage.columnViewTemplate;
+      this.viewSegments.selectSegment(1);
 
       // Set browser
       this.browser = new Browser();
@@ -228,7 +233,9 @@
     },
 
     mounted() {
-      window.location.replace(window.location.origin + '#/');
+      window.location.replace(window.location.origin
+          + window.location.pathname
+          + '#/');
     },
 
     methods: {
@@ -273,7 +280,9 @@
         // eslint-disable-next-line
         const dir = this.findFile(path);
         this.pwd = path;
-        window.location.replace(window.location.origin + '#' + this.pwd)
+        window.location.replace(window.location.origin
+          + window.location.pathname
+          + '#' + this.pwd)
       },
 
       childOf(path, parentPath) {

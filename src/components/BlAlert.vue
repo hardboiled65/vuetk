@@ -8,12 +8,22 @@
       <bl-view
         :layoutType="$bl.View.Layout.LayoutType.Flexbox"
         :orientation="$bl.View.Layout.Orientation.Vertical"
-        :width="300">
-        <bl-image-view
-          :instance="imageView">
-        </bl-image-view>
-        <h1 v-if="instance.message">{{ instance.message }}</h1>
-        <div>{{ instance.informativeText }}</div>
+        :width="'Auto'">
+        <bl-view
+          :layoutType="$bl.View.Layout.LayoutType.Flexbox"
+          :orientation="$bl.View.Layout.Orientation.Horizontal"
+          :width="300">
+          <bl-image-view
+            :instance="imageView">
+          </bl-image-view>
+          <bl-view
+            :layoutType="$bl.View.Layout.LayoutType.Flexbox"
+            :orientation="$bl.View.Layout.Orientation.Vertical"
+            :width="'Auto'">
+            <h1 v-if="instance.message">{{ instance.message }}</h1>
+            <div>{{ instance.informativeText }}</div>
+          </bl-view>
+        </bl-view>
         <div class="buttons">
           <bl-button
             v-for="(button, idx) in instance.buttons" :key="idx"

@@ -1,7 +1,12 @@
 import ViewMixin from './ViewMixin'
 
 export default {
-  props: {},
+  props: {
+    enabled: {
+      type: Boolean,
+      default: null
+    },
+  },
 
   mixins: [
     ViewMixin,
@@ -61,6 +66,17 @@ export default {
     },
   },
 
+  watch: {
+    enabled(newVal, oldVal) {
+      if (oldVal !== null) {
+        this.instance.enabled = newVal;
+      }
+    },
+  },
+
   created() {
+    if (this.enabled !== null) {
+      this.instance.enabled = this.enabled;
+    }
   }
 }
