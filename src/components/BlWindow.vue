@@ -35,7 +35,7 @@
           @click="$emit('windowMinimize')"
           @mousedown.stop>-</button>
       </div>
-      <span class="title">{{ instance.title }}</span>
+      <span class="title">{{ model.title }}</span>
       <div class="right-space">
       </div>
     </div>
@@ -157,8 +157,7 @@
       // Instance type
       //==================
       mainWindow() {
-        return this.model.type === ApplicationWindow.WindowType.MainWindow ||
-          this.model.type === ApplicationWindow.WindowType.AppWindow;
+        return this.model.type === ApplicationWindow.WindowType.AppWindow;
       },
 
       //=================
@@ -216,12 +215,16 @@
         }
       },
 
-      'instance.title'(newVal) {
+      'model.title'(newVal) {
         this.title = newVal;
       },
     },
 
     created() {
+      if (this.instance.type === ApplicationWindow.WindowType.AppWindow) {
+        this.instance.state = ApplicationWindow.WindowState.Main;
+      }
+
       if (this.mainWindow) {
         document.title = this.title;
         let favicon = document.createElement('link');
@@ -232,6 +235,13 @@
 
       if (this.hasToolbar) {
         this.toolbar = new Toolbar();
+      }
+
+      // Sync values for constant.
+      if (this.constant) {
+        if (this.constant === 'aboutPanel') {
+          this.model.title = 'About App';
+        }
       }
     },
 
@@ -482,6 +492,10 @@
     flex-direction: column;
   }
 
+  .bl-window:focus {
+    outline: none;
+  }
+
   .bl-window.main-window {
     width: 100%;
     height: 100%;
@@ -507,6 +521,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
   }
 
   .bl-window .title-bar:active {

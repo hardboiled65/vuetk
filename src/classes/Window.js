@@ -11,7 +11,6 @@ const WindowType = Object.freeze({
   Panel: Symbol('WindowType.Panel'),
   Dialog: Symbol('WindowType.Dialog'),
   Alert: Symbol('WindowType.Alert'),
-  MainWindow: Symbol('WindowType.MainWindow'),
 })
 
 const WindowState = Object.freeze({

@@ -176,6 +176,10 @@ class View {
     return Layout;
   }
 
+  static get LayoutType() {
+    return LayoutType;
+  }
+
   static get LayoutPolicyType() {
     return LayoutPolicyType;
   }

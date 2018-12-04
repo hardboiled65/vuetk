@@ -40,7 +40,20 @@
         <bl-view
           :width="200">
           <bl-table-view
-            :instance="{}">
+            :instance="sidebar"
+            :anchorTop="0"
+            :anchorRight="0"
+            :anchorBottom="0"
+            :anchorLeft="0">
+            <template slot="column">
+              <bl-view
+                :layoutType="$bl.View.LayoutType.Flexbox"
+                :orientation="$bl.View.Layout.Orientation.Vertical"
+                :width="'Auto'">
+                <div>Home</div>
+                <div>Documents</div>
+              </bl-view>
+            </template>
           </bl-table-view>
         </bl-view>
         <bl-view
@@ -86,9 +99,11 @@
       v-if="showEditor"
       :instance="editor"
       @windowClose="showEditor = false">
-      <textarea
-        v-model="selectedFile.data">
-      </textarea>
+      <template slot="body">
+        <textarea
+          v-model="selectedFile.data">
+        </textarea>
+      </template>
     </bl-window>
   </div>
 </template>
@@ -101,6 +116,7 @@
     MenuItem,
     Button,
     SegmentedControl,
+    TableView,
     Browser,
     Toolbar,
     Image,
@@ -121,6 +137,7 @@
       // Views
       //===============
       mainMenu: null,
+      sidebar: null,
       browser: null,
       upButton: null,
       newFolderButton: null,
@@ -192,6 +209,9 @@
       this.viewSegments.addSegment().image = Image.SystemImage.columnViewTemplate;
       this.viewSegments.selectSegment(1);
 
+      // Set sidebar
+      this.sidebar = new TableView();
+
       // Set browser
       this.browser = new Browser();
       this.browser.addColumn();
@@ -235,8 +255,8 @@
 
     mounted() {
       window.location.replace(window.location.origin
-          + window.location.pathname
-          + '#/');
+        + window.location.pathname
+        + '#/');
     },
 
     methods: {

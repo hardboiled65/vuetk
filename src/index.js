@@ -25,8 +25,8 @@ import Menu from './classes/Menu'
 import MenuItem from './classes/MenuItem'
 import Button from './classes/Button'
 import SegmentedControl from './classes/SegmentedControl'
-import Icon from './classes/Icon'
 import Image from './classes/Image'
+import TableView from './classes/TableView'
 import Browser from './classes/Browser'
 import Toolbar from './classes/Toolbar'
 import View from './classes/View'
@@ -38,8 +38,8 @@ export {
   MenuItem,
   Button,
   SegmentedControl,
-  Icon,
   Image,
+  TableView,
   Browser,
   Toolbar,
   View,

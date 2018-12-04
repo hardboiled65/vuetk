@@ -1,10 +1,14 @@
 <template>
-  <div class="bl-table-view">
+  <div class="bl-table-view"
+    :style="controlStyle">
+    <slot name="column"></slot>
   </div>
 </template>
 
 <script>
   import ControlMixin from '../mixins/ControlMixin'
+
+  import TableView from '../classes/TableView'
 
   export default {
     name: 'bl-table-view',
@@ -15,9 +19,12 @@
 
     props: {
       instance: {
-        type: Object,
+        type: TableView,
         required: true
       },
+    },
+
+    computed: {
     },
   }
 </script>
