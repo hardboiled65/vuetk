@@ -7,6 +7,11 @@ const Stick = {
 
 export default {
   props: {
+    constant: {
+      type: String,
+      default: null
+    },
+
     anchorTop: {
       type: Number,
       default: null

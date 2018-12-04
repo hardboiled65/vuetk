@@ -77,6 +77,7 @@
     <!-- About panel -->
     <bl-window
       v-if="showAbout"
+      :constant="'aboutPanel'"
       @windowClose="showAbout = false">
       <bl-view>Hello!</bl-view>
     </bl-window>

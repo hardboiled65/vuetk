@@ -2,6 +2,19 @@
   <div class="bl-window" tabindex="0"
     :class="windowClass"
     :style="windowStyle">
+    <span class="edge-top"
+      v-if="!mainWindow && resizingAllowed">
+    </span>
+    <span class="edge-right"
+      v-if="!mainWindow && resizingAllowed">
+    </span>
+    <span class="edge-bottom"
+      v-if="!mainWindow && resizingAllowed">
+    </span>
+    <span class="edge-left"
+      v-if="!mainWindow && resizingAllowed">
+    </span>
+    <!-- Window title bar -->
     <div class="title-bar" ref="titleBar"
       v-if="!mainWindow"
       draggable="true"
@@ -18,6 +31,7 @@
           @mousedown.stop>X</button>
         <button class="button-window-minimize"
           v-if="setButtonWindowMinimize"
+          :disabled="!model.minimizeButton.enabled"
           @click="$emit('windowMinimize')"
           @mousedown.stop>-</button>
       </div>
@@ -77,6 +91,11 @@
     ],
 
     props: {
+      constant: {
+        type: String,
+        default: null
+      },
+
       instance: {
         type: ApplicationWindow,
         default: () => (
@@ -115,12 +134,11 @@
     }),
 
     computed: {
-      //==================
-      // Instance type
-      //==================
-      mainWindow() {
-        return this.instance.type === ApplicationWindow.WindowType.MainWindow ||
-          this.instance.type === ApplicationWindow.WindowType.AppWindow;
+      model() {
+        if (this.constant !== null) {
+          return ApplicationWindow[this.constant];
+        }
+        return this.instance;
       },
 
       hasMenuBar() {
@@ -129,6 +147,18 @@
 
       hasToolbar() {
         return (Boolean(this.$slots.toolbar) || this.toolbar);
+      },
+
+      resizingAllowed() {
+        return (this.model.type !== ApplicationWindow.WindowType.Alert);
+      },
+
+      //==================
+      // Instance type
+      //==================
+      mainWindow() {
+        return this.model.type === ApplicationWindow.WindowType.MainWindow ||
+          this.model.type === ApplicationWindow.WindowType.AppWindow;
       },
 
       //=================
@@ -143,12 +173,12 @@
         return {
           'main-window': this.mainWindow,
           'sub-window': !this.mainWindow,
-          'document-window': this.instance.type === WindowType.DocumentWindow,
-          'app-window': this.instance.type === WindowType.AppWindow,
-          'panel': this.instance.type === WindowType.Panel,
-          'dialog': this.instance.type === WindowType.Dialog,
-          'alert': this.instance.type === WindowType.Alert,
-          'key': this.instance.state === WindowState.Key,
+          'document-window': this.model.type === WindowType.DocumentWindow,
+          'app-window': this.model.type === WindowType.AppWindow,
+          'panel': this.model.type === WindowType.Panel,
+          'dialog': this.model.type === WindowType.Dialog,
+          'alert': this.model.type === WindowType.Alert,
+          'key': this.model.state === WindowState.Key,
         };
       },
 
@@ -171,11 +201,11 @@
       },
 
       posibleMinimumWidth() {
-        return 10;
+        return 60;
       },
 
       posibleMinimumHeight() {
-        return 10;
+        return 60;
       },
     },
 
@@ -214,14 +244,16 @@
         e.preventDefault();
       });
 
-      this.instance.rect.width = this.$el.offsetWidth;
-      this.instance.rect.height = this.$el.offsetHeight;
+      this.model.rect.width = this.$el.offsetWidth;
+      this.model.rect.height = this.$el.offsetHeight;
 
-      if (this.instance.type === ApplicationWindow.WindowType.AppWindow) {
+      // If the window integrated with browser(tab, window), add resize
+      // handler to the `window` object.
+      if (this.model.type === ApplicationWindow.WindowType.AppWindow) {
         if (this.windowResizeHandler === null) {
           this.windowResizeHandler = (evt) => {
-            this.instance.rect.width = this.$el.offsetWidth;
-            this.instance.rect.height = this.$el.offsetHeight;
+            this.model.rect.width = this.$el.offsetWidth;
+            this.model.rect.height = this.$el.offsetHeight;
           };
           window.addEventListener('resize', this.windowResizeHandler);
         }
@@ -445,7 +477,6 @@
 
   .bl-window {
     user-select: none;
-    overflow: hidden;
     background-color: #e2dfde;
     display: flex;
     flex-direction: column;
@@ -506,5 +537,40 @@
     left: 10px;
     border-radius: 5px;
     box-shadow: 0px 0px 5px grey;
+  }
+
+  .bl-window .edge-top, .edge-right, .edge-bottom, .edge-left {
+    position: absolute;
+    background-color: transparent;
+  }
+
+  .bl-window .edge-top, .edge-bottom {
+    width: 100%;
+    height: 5px;
+  }
+
+  .bl-window .edge-right, .edge-left {
+    height: 100%;
+    width: 5px;
+  }
+
+  .bl-window .edge-top {
+    top: -5px;
+    cursor: n-resize;
+  }
+
+  .bl-window .edge-right {
+    right: -5px;
+    cursor: e-resize;
+  }
+
+  .bl-window .edge-bottom {
+    bottom: -5px;
+    cursor: s-resize;
+  }
+
+  .bl-window .edge-left {
+    left: -5px;
+    cursor: w-resize;
   }
 </style>

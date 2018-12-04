@@ -28,6 +28,8 @@ class ApplicationWindow {
     this._rect.x = 0;
     this._rect.y = 0;
     this._state = WindowState.Inactive;
+    this._closeButton = new Button();
+    this._minimizeButton = new Button();
   }
 
   //==================
@@ -71,6 +73,14 @@ class ApplicationWindow {
 
   set title(title) {
     this._title = title;
+  }
+
+  get closeButton() {
+    return this._closeButton;
+  }
+
+  get minimizeButton() {
+    return this._minimizeButton;
   }
 
   //=================
@@ -145,6 +155,12 @@ class Alert extends ApplicationWindow {
     }
   }
 }
+
+//=================
+// Constants
+//=================
+ApplicationWindow.aboutPanel = new ApplicationWindow(WindowType.Panel);
+ApplicationWindow.aboutPanel.minimizeButton.enabled = false;
 
 export {
   ApplicationWindow,
