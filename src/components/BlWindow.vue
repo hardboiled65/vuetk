@@ -178,6 +178,7 @@
           'dialog': this.model.type === WindowType.Dialog,
           'alert': this.model.type === WindowType.Alert,
           'key': this.model.state === WindowState.Key,
+          'inactive': this.model.state === WindowState.Inactive,
         };
       },
 
@@ -223,6 +224,10 @@
     created() {
       if (this.instance.type === ApplicationWindow.WindowType.AppWindow) {
         this.instance.state = ApplicationWindow.WindowState.Main;
+      }
+
+      if (this.model.state === ApplicationWindow.WindowState.Inactive) {
+        this.model.state = ApplicationWindow.WindowState.Key;
       }
 
       if (this.mainWindow) {
@@ -545,6 +550,10 @@
 
   .bl-window .title-bar .title {
     text-shadow: 0 0 10px #ffffff;
+  }
+
+  .bl-window.inactive .title-bar .title {
+    color: lightgrey;
   }
 
   .sub-window {

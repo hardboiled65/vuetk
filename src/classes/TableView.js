@@ -20,6 +20,10 @@ class TableColumn {
 class TableView extends Control {
   constructor() {
     super();
+    this._selectedColumn = -1;
+    this._selectedRow = -1;
+
+    this._headerView = null;
   }
 
   static get TableColumn() {

@@ -51,7 +51,7 @@ class LayoutPolicy {
   }
 
   //==================
-  // Constants
+  // Enums
   //==================
   static get LayoutPolicyType() {
     return LayoutPolicyType;
@@ -94,7 +94,14 @@ class Layout {
   }
 
   //=================
-  // Constants
+  // Classes
+  //=================
+  static get LayoutPolicy() {
+    return LayoutPolicy;
+  }
+
+  //=================
+  // Enums
   //=================
   static get LayoutType() {
     return LayoutType;
@@ -106,10 +113,6 @@ class Layout {
 
   static get Direction() {
     return Direction;
-  }
-
-  static get LayoutPolicy() {
-    return LayoutPolicy;
   }
 }
 
@@ -170,14 +173,25 @@ class View {
   }
 
   //=================
-  // Constants
+  // Classes
   //=================
   static get Layout() {
     return Layout;
   }
 
+  //=================
+  // Enums
+  //=================
   static get LayoutType() {
     return LayoutType;
+  }
+
+  static get Orientation() {
+    return Orientation;
+  }
+
+  static get Direction() {
+    return Direction;
   }
 
   static get LayoutPolicyType() {

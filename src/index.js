@@ -52,6 +52,8 @@ export default {
       modal: null,
       menuOpened: false,
       modalOpened: false,
+      mainWindow: null,
+      keyWindow: null,
     };
 
     Vue.component(BlView.name, BlView);
