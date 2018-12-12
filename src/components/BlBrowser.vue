@@ -3,15 +3,19 @@
     :style="controlStyle">
     <section class="column"
       v-for="(column, columnIdx) in instance.columns" :key="columnIdx"
-      :class="{ [`column-${columnIdx}`]: true }"
+      :class="{
+        [`column-${columnIdx}`]: true,
+        selected: instance.selectedColumn === columnIdx,
+      }"
       @click="() => {
-        $emit('selectColumn', columnIdx);
-        $emit('selectRow', columnIdx, null);
+        onSelectColumn(columnIdx);
+        onSelectRow(columnIdx, null);
       }">
       <div class="row"
         style="text-align: left;"
         v-for="(row, idx) in column.rows" :key="idx"
-        @click.stop="$emit('selectRow', columnIdx, idx)">
+        :class="{ selected: instance.selectedRow(columnIdx) === idx }"
+        @click.stop="onSelectRow(columnIdx, idx)">
         <span>{{ row }}</span>
       </div>
     </section>
@@ -50,7 +54,27 @@
     computed: {
     },
 
+    updated() {
+      if (this.instance.selectedColumn === this.instance.columns.length -1) {
+        this.$el.scrollLeft = this.$el.scrollWidth;
+      }
+    },
+
     methods: {
+      onSelectColumn(columnIdx) {
+        this.instance._selectedColumn = (columnIdx !== null) ? columnIdx : -1;
+        this.$emit('selectColumn', columnIdx);
+      },
+
+      onSelectRow(columnIdx, rowIdx) {
+        if (rowIdx === null) {
+          this.instance.selectRow(-1, columnIdx);
+        } else {
+          this.instance.selectRow(rowIdx, columnIdx);
+        }
+        this.instance._selectedColumn = columnIdx;
+        this.$emit('selectRow', columnIdx, rowIdx);
+      },
     }
   }
 </script>
@@ -69,6 +93,15 @@
   }
 
   .bl-browser .column .row:hover {
+    background-color: blue;
+    color: white;
+  }
+
+  .bl-browser .column:not(.selected) .row.selected {
+    background-color: grey;
+  }
+
+  .bl-browser .column.selected .row.selected {
     background-color: #9999ff;
     color: white;
   }

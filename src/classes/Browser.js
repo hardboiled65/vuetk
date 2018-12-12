@@ -1,15 +1,22 @@
 import Control from './Control'
 
-class Browser extends Control {
-  static Column() {
-    this.rows = [];
+class Column {
+  constructor() {
+    this.rows = []
     this.width = 100;
-    return this;
+    this._selectedRow = -1;
   }
 
+  get selectedRow() {
+    return this._selectedRow;
+  }
+}
+
+class Browser extends Control {
   constructor() {
     super();
     this._columns = [];
+    this._selectedColumn = -1;
   }
 
   //==================
@@ -19,11 +26,30 @@ class Browser extends Control {
     return this._columns;
   }
 
+  get selectedColumn() {
+    return this._selectedColumn;
+  }
+
   //==================
   // Instance methods
   //==================
   addColumn() {
     this._columns.push(new Browser.Column());
+  }
+
+  selectedRow(columnIdx) {
+    return this._columns[columnIdx].selectedRow;
+  }
+
+  selectRow(rowIdx, columnIdx) {
+    this._columns[columnIdx]._selectedRow = rowIdx;
+  }
+
+  //==================
+  // Classes
+  //==================
+  static get Column() {
+    return Column;
   }
 }
 
