@@ -47,6 +47,9 @@ export {
 
 export default {
   install(Vue, options) {
+    // eslint-disable-next-line
+    var doNothing = options;
+
     // Global state
     var state = {
       modal: null,

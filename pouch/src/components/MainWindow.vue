@@ -148,7 +148,6 @@
       // State
       //===============
       pwd: '/',
-      selectedDir: null,
       selectedFile: null,
       root: {
         type: 'folder',
@@ -160,9 +159,6 @@
     }),
 
     watch: {
-      selectedDir(/*newValue*/) {
-        this.setRows();
-      },
     },
 
     computed: {
@@ -214,7 +210,6 @@
 
       // Set browser
       this.browser = new Browser();
-      this.browser.addColumn();
       this.browser.addColumn();
 
       // Set buttons
@@ -295,11 +290,24 @@
         return path;
       },
 
+      paths(path) {
+        if (path === '/') {
+          return ['/'];
+        }
+        let paths = path.split('/');
+        paths[0] = '/';
+        return paths;
+      },
+
       enterDir(path) {
         // eslint-disable-next-line
         console.log('enter', path);
         // eslint-disable-next-line
         const dir = this.findFile(path);
+        // Set browser columns.
+        if (this.pwd.length < path.length) {
+          this.browser.addColumn();
+        }
         this.pwd = path;
         window.location.replace(window.location.origin
           + window.location.pathname
@@ -330,6 +338,7 @@
           this.browser.columns[0].rows.push(pwdFile.children[i].name);
         }
         // Set column-1
+        /*
         this.browser.columns[1].rows = [];
         if (this.selectedDir) {
           const selectedDirFile = this.findFile(this.selectedDir);
@@ -337,6 +346,7 @@
             this.browser.columns[1].rows.push(selectedDirFile.children[i].name);
           }
         }
+        */
       },
 
       //======================
@@ -348,9 +358,7 @@
           if (path === this.pwd) {
             return;
           }
-          this.selectedDir = path;
-          // this.pwd = this.parentDir(path);
-          this.enterDir(this.parentDir(path));
+          this.enterDir(path);
         } else {
           this.selectedFile = file;
         }
@@ -367,7 +375,7 @@
       },
 
       onClickNewFolderButton() {
-        let folder = this.findFile(this.selectedDir || this.pwd);
+        let folder = this.findFile(this.pwd);
         let name = 'Folder';
         // Append number if same name exists.
         let num = 2;
@@ -389,35 +397,43 @@
           parent: folder,
           children: []
         });
-        this.setRows();
+        const idx = this.paths(this.pwd).length - 1;
+        this.browser.columns[idx].rows.push(name);
       },
 
       onSelectColumn(col) {
-        // eslint-disable-next-line
-        console.log('col', col);
+        if (col === this.browser.columns.length - 1) {
+          return;
+        }
+        let paths = this.paths(this.pwd);
+        while (paths.length - 1 > col) {
+          paths.pop();
+          this.browser.columns.pop();
+        }
+        // Enter.
+        let path = '/';
+        for (let i = 1; i < paths.length; ++i) {
+          path += '/' + paths[i];
+        }
+        this.enterDir(path);
       },
 
       onSelectRow(col, row) {
-        if (col === 0 && row !== null) {
+        if (row !== null) {
           const filename = this.browser.columns[col].rows[row];
-          const path = (this.pwd === '/') ? `/${filename}` : `${this.pwd}/${filename}`;
+          let paths = this.paths(this.pwd)
+          while (paths.length - 1 > col) {
+            paths.pop();
+            this.browser.columns.pop();
+          }
+          paths.push(filename);
+          if (paths.length > 1) {
+            paths[0] = '';  // ['', 'foo', 'bar']
+          }
+          const path = paths.join('/');
+          console.log(path);
           const file = this.findFile(path);
           this.onClickFile(file);
-          this.setRows();
-        } else if (col === 0 && row === null) {
-          this.selectedDir = null;
-        }
-
-        if (col === 1 && row !== null) {
-          const filename = this.browser.columns[col].rows[row];
-          const path = (this.selectedDir === '/')
-            ? `/${filename}`
-            : `${this.selectedDir}/${filename}`;
-          const file = this.findFile(path);
-          this.onClickFile(file);
-          this.setRows();
-        } else if (col === 1 && row === null) {
-          this.selectedFile = null;
         }
       },
 
