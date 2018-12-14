@@ -1,10 +1,12 @@
 <template>
-  <div class="bl-segmented-control">
+  <div class="bl-segmented-control"
+    :class="segmentedControlClass">
     <div class="segment"
       v-for="(segment, idx) in instance.segments" :key="idx"
       :class="{
         'selected': idx === instance.selectedSegment,
       }"
+      @mousedown="pressSegment(idx)"
       @click="selectSegment(idx)">
       <div class="_styler">
         <img
@@ -24,6 +26,8 @@
 
   import SegmentedControl from '../classes/SegmentedControl'
 
+  const SwitchTracking = SegmentedControl.SwitchTracking;
+
   export default {
     name: 'bl-segmented-control',
 
@@ -42,13 +46,33 @@
     }),
 
     computed: {
+      segmentedControlClass() {
+        let style = {
+          'separated': this.instance.style === SegmentedControl.Style.Separated,
+        };
+        return style;
+      },
     },
 
     methods: {
+      pressSegment(idx) {
+        if (this.instance.trackingMode === SwitchTracking.Momentary) {
+          this.instance.selectSegment(idx);
+        }
+      },
+
       selectSegment(idx) {
         if (this.instance.selectedSegment !== idx) {
           this.instance.selectSegment(idx);
         }
+        this.releaseSegment();
+      },
+
+      releaseSegment() {
+        if (this.instance.trackingMode !== SwitchTracking.Momentary) {
+          return;
+        }
+        this.instance.selectSegment(-1);
       },
     }
   }
@@ -88,6 +112,14 @@
   .bl-segmented-control .segment:last-child ._styler {
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
+  }
+
+  .bl-segmented-control .segment:active ._styler {
+    background-color: green;
+  }
+
+  .bl-segmented-control.separated .segment ._styler {
+    border-radius: 3px;
   }
 
   .bl-segmented-control .segment.selected ._styler {

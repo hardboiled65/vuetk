@@ -18,6 +18,11 @@
           :enabled="pwd !== '/'">
         </bl-button>
       </bl-toolbar-item>
+      <bl-toolbar-item label="Back/Forward">
+        <bl-segmented-control
+          :instance="backForwardSegments">
+        </bl-segmented-control>
+      </bl-toolbar-item>
       <bl-toolbar-item label="View">
         <bl-segmented-control
           :instance="viewSegments">
@@ -131,10 +136,6 @@
     extends: BlWindow,
 
     data: () => ({
-      //===================
-      // Unique references
-      //===================
-      menu: null,
       //===============
       // Views
       //===============
@@ -145,6 +146,7 @@
       newFolderButton: null,
       editButton: null,
       editor: null,
+      backForwardSegments: null,
       viewSegments: null,
       //===============
       // State
@@ -161,6 +163,12 @@
     }),
 
     watch: {
+      'backForwardSegments.selectedSegment'(newVal, oldVal) {
+        if (oldVal > -1 && newVal === -1) {
+          // eslint-disable-next-line
+          console.log('momentary segment ' + oldVal + ' clicked.');
+        }
+      },
     },
 
     computed: {
@@ -200,6 +208,12 @@
       this.toolbar = new Toolbar();
 
       // Set segmented controls
+      this.backForwardSegments = new SegmentedControl();
+      this.backForwardSegments.style = SegmentedControl.Style.Separated;
+      this.backForwardSegments.trackingMode = SegmentedControl.SwitchTracking.Momentary;
+      this.backForwardSegments.addSegment().image = Image.SystemImage.goBackTemplate;
+      this.backForwardSegments.addSegment().image = Image.SystemImage.goForwardTemplate;
+
       this.viewSegments = new SegmentedControl();
       // this.viewSegments.addSegment().label = 'List';
       this.viewSegments.addSegment().image = Image.SystemImage.listViewTemplate;

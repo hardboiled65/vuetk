@@ -53,7 +53,7 @@
       },
 
       contextualMenu() {
-        return this.instance.type === Menu.MenuType.ContextMenu;
+        return this.instance.type === Menu.MenuType.ContextualMenu;
       },
 
       submenu() {
@@ -63,7 +63,7 @@
       menuClass() {
         return {
           'menu-bar-menu': this.menuBarMenu,
-          'context-menu': this.contextualMenu,
+          'contextual-menu': this.contextualMenu,
           'submenu': this.submenu,
         };
       },

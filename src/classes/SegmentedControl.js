@@ -1,6 +1,12 @@
 const SwitchTracking = Object.freeze({
   SelectOne: Symbol('SwitchTracking.SelectOne'),
   SelectAny: Symbol('SwitchTracking.SelectAny'),
+  Momentary: Symbol('SwitchTracking.Momentary'),
+})
+
+const Style = Object.freeze({
+  Default: Symbol('Style.Default'),
+  Separated: Symbol('Style.Separated'),
 })
 
 class SegmentedControl {
@@ -14,6 +20,7 @@ class SegmentedControl {
     this._segments = [];
     this._trackingMode = SwitchTracking.SelectOne;
     this._selected = -1;
+    this._style = Style.Default;
   }
 
   //==================
@@ -27,8 +34,20 @@ class SegmentedControl {
     return this._trackingMode;
   }
 
+  set trackingMode(switchTracking) {
+    this._trackingMode = switchTracking;
+  }
+
   get selectedSegment() {
     return this._selected;
+  }
+
+  get style() {
+    return this._style;
+  }
+
+  set style(style) {
+    this._style = style;
   }
 
   //==================
@@ -42,6 +61,17 @@ class SegmentedControl {
 
   selectSegment(idx) {
     this._selected = idx;
+  }
+
+  //==================
+  // Enums
+  //==================
+  static get Style() {
+    return Style;
+  }
+
+  static get SwitchTracking() {
+    return SwitchTracking;
   }
 }
 

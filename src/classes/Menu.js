@@ -1,6 +1,6 @@
 const MenuType = {
   MenuBarMenu: 0,
-  ContextMenu: 1,
+  ContextualMenu: 1,
   Submenu: 2,
 }
 
