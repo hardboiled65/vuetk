@@ -64,15 +64,13 @@
             :anchorLeft="10"
             :anchorBottom="10"
             :anchorRight="10"
-            @selectColumn="onSelectColumn"
             @selectRow="onSelectRow">
           </bl-browser>
         </bl-view>
         <bl-view class="preview"
-          v-if="selectedFile !== null"
+          v-if="selectedFile !== null && selectedFile.type === 'text'"
           :width="300">
-          <div class="preview-content"
-            v-if="selectedFile !== null && selectedFile.type === 'text'">
+          <div class="preview-content">
             <bl-button
               :instance="editButton">
             </bl-button>
@@ -109,6 +107,8 @@
 </template>
 
 <script>
+  import path from 'path'
+
   import {
     ApplicationWindow,
     Alert,
@@ -123,6 +123,8 @@
   } from '@hardboiled65/vuetk'
 
   import BlWindow from '@hardboiled65/vuetk/src/components/BlWindow'
+
+  const VIEW_SEGMENTS_INDEX_BROWSER = 1;
 
   export default {
     name: 'main-window',
@@ -203,7 +205,7 @@
       this.viewSegments.addSegment().image = Image.SystemImage.listViewTemplate;
       // this.viewSegments.addSegment().label = 'Browser';
       this.viewSegments.addSegment().image = Image.SystemImage.columnViewTemplate;
-      this.viewSegments.selectSegment(1);
+      this.viewSegments.selectSegment(VIEW_SEGMENTS_INDEX_BROWSER);
 
       // Set sidebar
       this.sidebar = new TableView();
@@ -219,7 +221,7 @@
 
       this.newFolderButton = new Button();
       this.newFolderButton.title = 'New Folder';
-      this.newFolderButton.action = this.onClickNewFolderButton;
+      this.newFolderButton.action = this.newFolderAction;
 
       this.editButton = new Button();
       this.editButton.title = 'Edit';
@@ -245,7 +247,7 @@
       });
 
       // Sync directory structure
-      this.setRows();
+      this.reloadColumn(0);
     },
 
     mounted() {
@@ -304,11 +306,18 @@
         console.log('enter', path);
         // eslint-disable-next-line
         const dir = this.findFile(path);
-        // Set browser columns.
-        if (this.pwd.length < path.length) {
-          this.browser.addColumn();
-        }
+        const oldPwd = this.pwd;
+
         this.pwd = path;
+
+        const viewIdx = this.viewSegments.selectedSegment;
+        if (viewIdx === VIEW_SEGMENTS_INDEX_BROWSER) {
+          // Set browser columns.
+          if (oldPwd.length < path.length) {
+            this.browser.addColumn();
+            this.reloadColumn(this.browser.columns.length - 1);
+          }
+        }
         window.location.replace(window.location.origin
           + window.location.pathname
           + '#' + this.pwd)
@@ -330,12 +339,13 @@
       //======================
       // Sync columns & rows
       //======================
-      setRows() {
-        // Set column-0
-        const pwdFile = this.findFile(this.pwd);
-        this.browser.columns[0].rows = [];
-        for (let i = 0; i < pwdFile.children.length; ++i) {
-          this.browser.columns[0].rows.push(pwdFile.children[i].name);
+      reloadColumn(columnIndex) {
+        // Get column's directory.
+        const dirPath = this.pathOfColumn(columnIndex);
+        const dir = this.findFile(dirPath);
+        this.browser.columns[columnIndex].rows = [];
+        for (let i = 0; i < dir.children.length; ++i) {
+          this.browser.columns[columnIndex].rows.push(dir.children[i].name);
         }
         // Set column-1
         /*
@@ -353,14 +363,13 @@
       // Click actions
       //======================
       onClickFile(file) {
+        this.selectedFile = file;
         const path = this.getFullPath(file);
         if (file.type === 'folder') {
           if (path === this.pwd) {
             return;
           }
           this.enterDir(path);
-        } else {
-          this.selectedFile = file;
         }
       },
 
@@ -371,10 +380,55 @@
         let path = this.pwd.replace(/[^/]+$/, '');
         path !== '/' ? path = path.substring(0, path.length -1) : null;
         this.enterDir(path);
-        this.setRows();
+        this.reloadColumn();
       },
 
-      onClickNewFolderButton() {
+
+      //=====================
+      // Browser events
+      //=====================
+      onSelectColumn(col) {
+        if (col === this.browser.columns.length - 1) {
+          return;
+        }
+        const columnMaxIdx = this.browser.columns.length - 1;
+        // Get selected column's path.
+        let newPwd = this.pwd;
+        for (let i = columnMaxIdx; i > col; --i) {
+          newPwd = path.join(newPwd, '..');
+          this.browser.columns.pop();
+        }
+        this.enterDir(newPwd);
+      },
+
+      onSelectRow(col, row) {
+        this.onSelectColumn(col);
+        if (row !== null) {
+          const filename = this.browser.columns[col].rows[row];
+          const filepath = path.join(this.pwd, filename);
+          const file = this.findFile(filepath);
+          this.onClickFile(file);
+        } else {
+          this.selectedFile = null;
+        }
+      },
+
+      //===================
+      // Browser functions
+      //===================
+      pathOfColumn(col) {
+        const columnMaxIdx = this.browser.columns.length - 1;
+        let columnPath = this.pwd;
+        for (let i = columnMaxIdx; i > col; --i) {
+          columnPath = path.join(columnPath, '..');
+        }
+        return columnPath;
+      },
+
+      //===================
+      // Actions
+      //===================
+      newFolderAction() {
         let folder = this.findFile(this.pwd);
         let name = 'Folder';
         // Append number if same name exists.
@@ -401,58 +455,17 @@
         this.browser.columns[idx].rows.push(name);
       },
 
-      onSelectColumn(col) {
-        if (col === this.browser.columns.length - 1) {
-          return;
-        }
-        let paths = this.paths(this.pwd);
-        while (paths.length - 1 > col) {
-          paths.pop();
-          this.browser.columns.pop();
-        }
-        // Enter.
-        let path = '/';
-        for (let i = 1; i < paths.length; ++i) {
-          path += '/' + paths[i];
-        }
-        this.enterDir(path);
-      },
-
-      onSelectRow(col, row) {
-        if (row !== null) {
-          const filename = this.browser.columns[col].rows[row];
-          let paths = this.paths(this.pwd)
-          while (paths.length - 1 > col) {
-            paths.pop();
-            this.browser.columns.pop();
-          }
-          paths.push(filename);
-          if (paths.length > 1) {
-            paths[0] = '';  // ['', 'foo', 'bar']
-          }
-          const path = paths.join('/');
-          console.log(path);
-          const file = this.findFile(path);
-          this.onClickFile(file);
-        }
-      },
-
-      //===================
-      // Actions
-      //===================
-      newFolderAction() {
-        this.onClickNewFolderButton();
-      },
-
       newTextFileAction() {
         let folder = this.findFile(this.pwd);
-        folder.children.push({
+        let newFile = {
           type: 'text',
           name: new Date().toLocaleString().replace(/[/]/g, '-'),
           parent: folder,
           data: ''
-        });
-        this.setRows();
+        };
+        folder.children.push(newFile);
+        const idx = this.browser.columns.length - 1;
+        this.browser.columns[idx].rows.push(newFile.name);
       },
 
       editAction() {
