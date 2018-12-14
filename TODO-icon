@@ -1,0 +1,93 @@
+Control = {
+  Action
+  Add
+  Bluetooth
+  Bookmarks
+  ColumnView
+  EnterFullScreen
+  ExitFullScreen
+  FlowView
+  GoBack
+  GoForward
+  GoLeft
+  GoRight
+  IconView
+  LeftFacingTriangle
+  ListView
+  Locked
+  Unlocked
+  Path
+  QuickLook
+  Refresh
+  Remove
+  RightFacingTriangle
+  Share
+  Slideshow
+  SmartBadge
+  StopProgress
+}
+
+// Done!
+Freestanding = {
+  FollowLink
+  InvalidData
+  Refresh
+  Reveal
+  StopProgress
+}
+
+// Done!
+MenuState = {
+  Mixed
+  On
+}
+
+Multi-Item Drag Image Icons
+{
+  MultipleDocuments
+}
+
+// Done!
+Permission = {
+  Everyone
+  User
+  UserGroup
+  UserGuest
+}
+
+// Done!
+Preferences = {
+  Advanced
+  General
+  UserAccounts
+}
+
+// Done!
+Status = {
+  Available
+  None
+  PartiallyAvailable
+  Unavailable
+}
+
+// Done!
+SystemEntity = {
+  ApplicationIcon
+  Bonjour
+  FolderBurnable
+  Caution
+  Computer
+  Folder
+  Home
+  Network
+  FolderSmart
+  TrashEmpty
+  TrashFull
+}
+
+// Done!
+Toolbar = {
+  ColorPanel
+  FontPanel
+  Info
+}

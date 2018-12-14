@@ -1,31 +1,22 @@
 <template>
   <div id="app">
-    <bl-window
-      :menus="menus">
-      <template slot="toolbar">
-        <div>Toolbar</div>
-        <bl-button></bl-button>
-      </template>
-    </bl-window>
+    <main-window>
+    </main-window>
   </div>
 </template>
 
 <script>
-import BlWindow from './components/BlWindow'
-import BlButton from './components/BlButton'
+import MainWindow from './components/MainWindow.vue'
 
 export default {
   name: 'app',
   components: {
-    BlWindow,
-    BlButton,
+    MainWindow,
   },
 
-  data: () => ({
-    menus: [
-      'File', 'Edit', 'Help',
-    ],
-  }),
+  created() {
+    this.$vuetk.app = this;
+  }
 }
 </script>
 
