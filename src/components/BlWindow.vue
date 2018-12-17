@@ -492,7 +492,9 @@
 
   .bl-window {
     user-select: none;
-    background-color: #e2dfde;
+    background: linear-gradient(to bottom,
+       #e2dfde,
+       #C1BBB8 308px);
     display: flex;
     flex-direction: column;
   }
