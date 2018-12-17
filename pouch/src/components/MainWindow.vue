@@ -74,14 +74,18 @@
         </bl-view>
         <bl-view class="preview"
           v-if="selectedFile !== null && selectedFile.type === 'text'"
+          :layoutType="$bl.View.LayoutType.Flexbox"
+          :orientation="$bl.View.Orientation.Vertical"
           :width="300">
-          <div class="preview-content">
-            <bl-button
-              :instance="editButton">
-            </bl-button>
-            <h3>{{ selectedFile.name }}</h3>
-            <p>{{ selectedFile.data }}</p>
-          </div>
+          <bl-button
+            :instance="editButton">
+          </bl-button>
+          <bl-label
+            :text="selectedFile.name">
+          </bl-label>
+          <bl-label
+            :text="selectedFile.data">
+          </bl-label>
         </bl-view>
       </bl-split-view>
     </bl-view>

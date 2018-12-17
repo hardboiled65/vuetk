@@ -16,6 +16,7 @@ import BlMenuItem from './components/BlMenuItem'
 
 import BlButton from './components/BlButton'
 import BlSegmentedControl from './components/BlSegmentedControl'
+import BlLabel from './components/BlLabel'
 
 //===============
 // Classes
@@ -30,10 +31,12 @@ import TableView from './classes/TableView'
 import Browser from './classes/Browser'
 import Toolbar from './classes/Toolbar'
 import View from './classes/View'
+import Label from './classes/Label'
 
 export {
   ApplicationWindow,
   Alert,
+  Label,
   Menu,
   MenuItem,
   Button,
@@ -71,6 +74,7 @@ export default {
     Vue.component(BlSegmentedControl.name, BlSegmentedControl);
     Vue.component(BlToolbarItem.name, BlToolbarItem);
     Vue.component(BlTableView.name, BlTableView);
+    Vue.component(BlLabel.name, BlLabel);
 
     Vue.prototype.$bl = {
       Button: Button,

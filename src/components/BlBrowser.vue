@@ -24,7 +24,7 @@
 </template>
 
 <script>
-  import BlView from './BlView'
+  // import BlView from './BlView'
 
   import ControlMixin from '../mixins/ControlMixin'
 
@@ -34,7 +34,7 @@
     name: 'bl-browser',
 
     components: {
-      BlView,
+      // BlView,
     },
 
     mixins: [

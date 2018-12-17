@@ -75,7 +75,7 @@
 
   import { ApplicationWindow } from '../classes/Window'
   import Toolbar from '../classes/Toolbar'
-  import View from '../classes/View'
+  // import View from '../classes/View'
   import Image from '../classes/Image'
 
   export default {
