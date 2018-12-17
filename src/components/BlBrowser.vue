@@ -14,7 +14,9 @@
       <div class="row"
         style="text-align: left;"
         v-for="(row, idx) in column.rows" :key="idx"
-        :class="{ selected: instance.selectedRow(columnIdx) === idx }"
+        :class="{
+          'selected': instance.selectedRow(columnIdx) === idx
+        }"
         @click.stop="onSelectRow(columnIdx, idx)">
         <span>{{ row }}</span>
       </div>
